@@ -15,26 +15,45 @@ type Query = {
 
 function QueryList({ queries }: { queries: Query[] }) {
   return (
-    <ul>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {queries.map((q) => (
-        <li key={q.name}>
-          <a href={`#${q.name}`}>{q.displayName}</a>
-        </li>
+        <a 
+          key={q.name} 
+          href={`#${q.name}`}
+          className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100 hover:border-indigo-100 flex items-center"
+        >
+          <div className="mr-3 text-indigo-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+            </svg>
+          </div>
+          <span className="text-gray-800 font-medium">{q.displayName}</span>
+        </a>
       ))}
-    </ul>
+    </div>
   );
 }
 
 function QueryDisplay({ query }: { query: Query }) {
   return (
-    <div class="query-container" id={query.name}>
-      <h2>{query.displayName}</h2>
-      <p>
-        File: <code>{query.path}</code>
-      </p>
-      <pre>
-        <code class="language-sql">{query.content}</code>
+    <div className="query-container my-12 bg-white rounded-lg shadow-md overflow-hidden" id={query.name}>
+      <div className="px-6 py-4 bg-indigo-50 border-b border-indigo-100">
+        <h2 className="text-2xl font-bold text-gray-800">{query.displayName}</h2>
+        <p className="text-sm text-gray-600 flex items-center mt-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+          </svg>
+          <code className="font-mono text-xs">{query.path}</code>
+        </p>
+      </div>
+      <pre className="p-0 m-0 bg-gray-50 overflow-auto">
+        <code className="language-sql p-6 block">{query.content}</code>
       </pre>
+      <div className="p-4 bg-gray-50 border-t border-gray-100 text-right">
+        <a href="#top" className="text-sm text-indigo-600 hover:text-indigo-800 transition-colors duration-200">
+          Back to top
+        </a>
+      </div>
     </div>
   );
 }
@@ -47,106 +66,124 @@ function Layout({ queries }: { queries: Query[] }) {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>BigQuery SQL Queries</title>
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/github.min.css"
-        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.min.css" />
         <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js">
         </script>
         <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/sql.min.js">
         </script>
-        <style>
-          {`
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
-            color: #333;
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>{`
+          tailwind.config = {
+            theme: {
+              extend: {
+                fontFamily: {
+                  sans: ['Inter', 'Segoe UI', 'system-ui', 'sans-serif'],
+                  mono: ['JetBrains Mono', 'Menlo', 'Consolas', 'monospace']
+                }
+              }
+            }
           }
-          header {
-            border-bottom: 1px solid #eee;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-          }
-          h1 {
-            margin-top: 0;
-          }
-          h2 {
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
-          }
-          pre {
-            background: #f8f8f8;
-            border-radius: 4px;
-            padding: 1rem;
-            overflow: auto;
-          }
-          .query-container {
-            margin-bottom: 2rem;
-          }
-          .toc {
-            background: #f8f8f8;
-            padding: 1rem;
-            border-radius: 4px;
-            margin-bottom: 2rem;
-          }
-          .toc ul {
-            margin: 0;
-            padding-left: 1.5rem;
-          }
-          footer {
-            margin-top: 3rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
-            font-size: 0.9rem;
-            color: #666;
-          }
-          .timestamp {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 1rem;
-          }
-        `}
-        </style>
+        `}</script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
       </head>
-      <body>
-        <header>
-          <h1>BigQuery SQL Queries</h1>
-          <p class="timestamp">Generated: {timestamp}</p>
+      <body className="bg-gray-50 min-h-screen" id="top">
+        <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800">BigQuery SQL Queries</h1>
+                <p className="text-sm text-gray-500 mt-1">Generated: {new Date(timestamp).toLocaleString()}</p>
+              </div>
+              <a 
+                href="https://github.com/leighmcculloch/CodeScratch/tree/main/bigquery" 
+                target="_blank"
+                className="text-gray-600 hover:text-gray-900"
+              >
+                <svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor" className="w-6 h-6">
+                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </header>
 
-        <div class="toc">
-          <h3>Table of Contents</h3>
-          <QueryList queries={queries} />
-        </div>
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <section className="mb-12">
+            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Query Collection</h2>
+              <p className="text-gray-600 mb-6">
+                Browse the collection of SQL queries for BigQuery analysis. Click any query to view its content.
+              </p>
+              <QueryList queries={queries} />
+            </div>
+          </section>
 
-        {queries.map((query) => <QueryDisplay
-          key={query.name}
-          query={query}
-        />)}
+          <section>
+            {queries.map((query) => (
+              <QueryDisplay
+                key={query.name}
+                query={query}
+              />
+            ))}
+          </section>
+        </main>
 
-        <footer>
-          <p>
-            Generated by Deno JSX. SQL queries from{" "}
-            <a
-              href="https://github.com/leighmcculloch/CodeScratch/tree/main/bigquery"
-              target="_blank"
-            >
-              leighmcculloch/CodeScratch/bigquery
-            </a>
-          </p>
+        <footer className="bg-white border-t border-gray-200 mt-12">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <p className="text-center text-gray-600 text-sm">
+              Generated by Deno JSX • BigQuery SQL Query Explorer •{" "}
+              <a 
+                href="https://github.com/leighmcculloch/CodeScratch/tree/main/bigquery" 
+                target="_blank"
+                className="text-indigo-600 hover:text-indigo-800 hover:underline"
+              >
+                GitHub Repository
+              </a>
+            </p>
+          </div>
         </footer>
 
-        <script>
-          {`
+        <button 
+          onClick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+          className="fixed bottom-4 right-4 bg-indigo-600 text-white p-2 rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          id="back-to-top"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+          </svg>
+        </button>
+
+        <script>{`
           document.addEventListener('DOMContentLoaded', () => {
             hljs.highlightAll();
+            
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+              anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                  window.scrollTo({
+                    top: target.offsetTop - 80,
+                    behavior: 'smooth'
+                  });
+                }
+              });
+            });
+            
+            // Show/hide back to top button
+            const backToTopButton = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+              if (window.scrollY > 300) {
+                backToTopButton.classList.remove('hidden');
+              } else {
+                backToTopButton.classList.add('hidden');
+              }
+            });
           });
-        `}
-        </script>
+        `}</script>
       </body>
     </html>
   );
