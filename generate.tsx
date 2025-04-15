@@ -1,6 +1,6 @@
 /** @jsx h */
 /** @jsxFrag Fragment */
-import { Fragment, h } from "npm:preact";
+import { h } from "npm:preact";
 import { renderToString } from "npm:preact-render-to-string";
 import { walk } from "jsr:@std/fs";
 import { basename, extname } from "jsr:@std/path";
@@ -395,4 +395,3 @@ async function main() {
 if (import.meta.main) {
   main();
 }
-
