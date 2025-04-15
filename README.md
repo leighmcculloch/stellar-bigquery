@@ -1,8 +1,7 @@
-# BigQuery SQL Queries
+# Leigh's Stellar BigQuery Queries
 
-This repository contains SQL queries for analyzing muxed account data in
-BigQuery. This repository contains a collection of BigQuery queries that I,
-[Leigh] have personally found helpful when using [Stellar Hubble]. Stellar
+This repository contains a collection of BigQuery queries that I,
+[Leigh], have personally found helpful when using [Stellar Hubble]. Stellar
 Hubble is the public BigQuery repository containing historical/archive data for
 the [Stellar Network].
 
