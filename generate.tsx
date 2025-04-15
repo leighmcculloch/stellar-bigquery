@@ -254,7 +254,7 @@ function Layout({ queries }: { queries: Query[] }) {
                 A collection of BigQuery queries for the{" "}
                 <a href="https://developers.stellar.org/docs/data/analytics/hubble">
                   public Stellar blockchain data
-                </a>. Click any query to view its content.
+                </a>.
               </p>
               <QueryList queries={queries} />
             </div>
