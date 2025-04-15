@@ -1,10 +1,10 @@
 /** @jsx h */
 /** @jsxFrag Fragment */
-import { Fragment, h } from "https://esm.sh/preact@10.15.1";
-import { renderToString } from "https://esm.sh/preact-render-to-string@6.2.1";
-import { walk } from "https://deno.land/std/fs/mod.ts";
-import { basename, extname } from "https://deno.land/std/path/mod.ts";
-import { parse } from "https://deno.land/std/flags/mod.ts";
+import { Fragment, h } from "npm:preact";
+import { renderToString } from "npm:preact-render-to-string";
+import { walk } from "jsr:@std/fs";
+import { basename, extname } from "jsr:@std/path";
+import { parse } from "jsr:@std/flags";
 
 type Query = {
   name: string;
