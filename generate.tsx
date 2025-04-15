@@ -71,7 +71,7 @@ function QueryDisplay({ query }: { query: Query }) {
   // Extract filename without extension for GitHub link
   const filename = query.path.split("/").pop()?.replace(".sql", "") || "";
   const githubUrl =
-    `https://github.com/leighmcculloch/stellar-bigquery/blob/main/samples/${filename}.sql`;
+    `https://github.com/leighmcculloch/stellar-bigquery/blob/main/queries/${filename}.sql`;
 
   return (
     <div
