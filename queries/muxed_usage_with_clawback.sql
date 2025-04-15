@@ -7,8 +7,7 @@ WITH clawback_operations AS (
     o.closed_at,
     o.type_string,
     t.transaction_hash,
-    details_json.from AS from_account,
-    details_json.from_muxed AS from_muxed
+    JSON_VALUE(details_json.from_muxed) AS from_muxed
   FROM
     `crypto-stellar.crypto_stellar.history_operations` AS o,
     UNNEST([o.details_json]) AS details_json
@@ -17,7 +16,7 @@ WITH clawback_operations AS (
     ON o.transaction_id = t.id
   WHERE
     o.closed_at IS NOT NULL
-    AND o.type_string = 'CLAWBACK'
+    AND o.type_string = 'clawback'
 )
 
 -- Get aggregations and latest transaction hash with from_muxed account per group
@@ -32,7 +31,7 @@ SELECT
     IGNORE NULLS
     ORDER BY closed_at DESC 
     LIMIT 1
-  )[OFFSET(0)] AS latest_muxed_clawback_tx_hash
+  )[OFFSET(0)] AS sample_muxed_clawback_tx_hash
 FROM
   clawback_operations
 GROUP BY

@@ -39,7 +39,7 @@ SELECT
     IGNORE NULLS
     ORDER BY closed_at DESC 
     LIMIT 1
-  )[OFFSET(0)] AS latest_muxed_transaction_hash
+  )[OFFSET(0)] AS example_muxed_transaction_hash
 FROM
   operations_with_source
 GROUP BY
