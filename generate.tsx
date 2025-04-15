@@ -221,7 +221,7 @@ function Layout({ queries }: { queries: Query[] }) {
             <div className="flex justify-between items-center">
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">
-                  Leigh's BigQuery SQL Queries
+                  Leigh's Stellar BigQuery Queries
                 </h1>
                 <p className="text-sm text-gray-500 mt-1">
                   Updated: {new Date(timestamp).toLocaleString()}
