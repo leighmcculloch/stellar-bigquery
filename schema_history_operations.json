@@ -1,0 +1,1622 @@
+[
+  {
+    "name": "details",
+    "mode": "NULLABLE",
+    "type": "RECORD",
+    "description": "Record that contains details based on the type of operation executed. Each operation will return its own relevant details, with the rest of the details as null",
+    "fields": [
+      {
+        "name": "account",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The amount of sold asset that was moved from the seller account to the buyer account, reported in terms of the sold amount",
+        "fields": []
+      },
+      {
+        "name": "account_muxed",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The virtual address of the account if the account is multiplexed",
+        "fields": []
+      },
+      {
+        "name": "account_muxed_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "Integer representation of the virtual address of the account if the account is multiplexed.",
+        "fields": []
+      },
+      {
+        "name": "account_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The address of the account which is no longer sponsored",
+        "fields": []
+      },
+      {
+        "name": "amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "Float representation of the amount of an asset sent/offered/etc",
+        "fields": []
+      },
+      {
+        "name": "asset",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The asset available to be claimed in the form of \"asset_code:issuing_address\". If the claimable balance is in XLM, it is reported as \"native\"",
+        "fields": []
+      },
+      {
+        "name": "asset_code",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The 4 or 12 character code representation of the asset on the network",
+        "fields": []
+      },
+      {
+        "name": "asset_issuer",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the original asset issuer that created the asset",
+        "fields": []
+      },
+      {
+        "name": "asset_id",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The identifier of the asset involved in the operation. This field provides details about the specific asset being operated on, such as in payment or transfer operations.",
+        "fields": []
+      },
+      {
+        "name": "asset_type",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The identifier for type of asset code, can be a alphanumeric with 4 characters, 12 characters or the native asset to the network, XLM.",
+        "fields": []
+      },
+      {
+        "name": "authorize",
+        "mode": "NULLABLE",
+        "type": "BOOLEAN",
+        "description": "Indicates whether the trustline is authorized. 0 is if the account is not authorized to transact with the asset in any way. 1 if the account is authorized to transact with the asset. 2 if the account is authorized to maintain orders, but not to perform other transactions.",
+        "fields": []
+      },
+      {
+        "name": "balance_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The balance id of the claimable balance which is claimed or no longer sponsored",
+        "fields": []
+      },
+      {
+        "name": "buying_asset_code",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The 4 or 12 character code representation of the asset that is either bought or offered to buy in a trade",
+        "fields": []
+      },
+      {
+        "name": "buying_asset_issuer",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the original asset issuer that created the asset bought or offered to buy",
+        "fields": []
+      },
+      {
+        "name": "buying_asset_id",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The identifier of the asset being bought in the operation. This is relevant for trade and offer operations, where one asset is exchanged for another.",
+        "fields": []
+      },
+      {
+        "name": "buying_asset_type",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The identifier for type of asset code, can be a alphanumeric with 4 characters, 12 characters or the native asset to the network, XLM.",
+        "fields": []
+      },
+      {
+        "name": "claimable_balance_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The balance id of the claimable balance which is no longer sponsored",
+        "fields": []
+      },
+      {
+        "name": "claimant",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the account which claimed the claimable balance",
+        "fields": []
+      },
+      {
+        "name": "claimant_muxed",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, the virtual address of the account which claimed the claimable balance",
+        "fields": []
+      },
+      {
+        "name": "claimant_muxed_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, an integer representation of the muxed account which claimed the balance",
+        "fields": []
+      },
+      {
+        "name": "claimants",
+        "mode": "REPEATED",
+        "type": "RECORD",
+        "description": "An unstructured field that lists account addresses eligible to claim a balance and the conditions which must be satisfied to claim the balance (typically time bound conditions)",
+        "fields": [
+          {
+            "name": "destination",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "predicate",
+            "mode": "REPEATED",
+            "type": "RECORD",
+            "description": "",
+            "fields": [
+              {
+                "name": "unconditional",
+                "mode": "NULLABLE",
+                "type": "BOOLEAN",
+                "description": "",
+                "fields": []
+              },
+              {
+                "name": "abs_before",
+                "mode": "NULLABLE",
+                "type": "STRING",
+                "description": "",
+                "fields": []
+              },
+              {
+                "name": "rel_before",
+                "mode": "NULLABLE",
+                "type": "INTEGER",
+                "description": "",
+                "fields": []
+              },
+              {
+                "name": "abs_before_epoch",
+                "mode": "NULLABLE",
+                "type": "INTEGER",
+                "description": "",
+                "fields": []
+              },
+              {
+                "name": "and",
+                "mode": "REPEATED",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "abs_before",
+                    "mode": "NULLABLE",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "rel_before",
+                    "mode": "NULLABLE",
+                    "type": "INTEGER",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "unconditional",
+                    "mode": "NULLABLE",
+                    "type": "BOOLEAN",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "abs_before_epoch",
+                    "mode": "NULLABLE",
+                    "type": "INTEGER",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "not",
+                    "mode": "REPEATED",
+                    "type": "RECORD",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "abs_before",
+                        "mode": "NULLABLE",
+                        "type": "STRING",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "rel_before",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "unconditional",
+                        "mode": "NULLABLE",
+                        "type": "BOOLEAN",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "abs_before_epoch",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "or",
+                    "mode": "REPEATED",
+                    "type": "RECORD",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "abs_before",
+                        "mode": "NULLABLE",
+                        "type": "STRING",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "rel_before",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "unconditional",
+                        "mode": "NULLABLE",
+                        "type": "BOOLEAN",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "abs_before_epoch",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "or",
+                        "mode": "REPEATED",
+                        "type": "RECORD",
+                        "description": "",
+                        "fields": [
+                          {
+                            "name": "abs_before",
+                            "mode": "NULLABLE",
+                            "type": "STRING",
+                            "description": "",
+                            "fields": []
+                          },
+                          {
+                            "name": "rel_before",
+                            "mode": "NULLABLE",
+                            "type": "INTEGER",
+                            "description": "",
+                            "fields": []
+                          },
+                          {
+                            "name": "unconditional",
+                            "mode": "NULLABLE",
+                            "type": "BOOLEAN",
+                            "description": "",
+                            "fields": []
+                          },
+                          {
+                            "name": "abs_before_epoch",
+                            "mode": "NULLABLE",
+                            "type": "INTEGER",
+                            "description": "",
+                            "fields": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "and",
+                    "mode": "REPEATED",
+                    "type": "RECORD",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "abs_before",
+                        "mode": "NULLABLE",
+                        "type": "STRING",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "rel_before",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "unconditional",
+                        "mode": "NULLABLE",
+                        "type": "BOOLEAN",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "abs_before_epoch",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "not",
+                "mode": "REPEATED",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "abs_before",
+                    "mode": "NULLABLE",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "rel_before",
+                    "mode": "NULLABLE",
+                    "type": "INTEGER",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "unconditional",
+                    "mode": "NULLABLE",
+                    "type": "BOOLEAN",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "abs_before_epoch",
+                    "mode": "NULLABLE",
+                    "type": "INTEGER",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "and",
+                    "mode": "REPEATED",
+                    "type": "RECORD",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "abs_before",
+                        "mode": "NULLABLE",
+                        "type": "STRING",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "rel_before",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "unconditional",
+                        "mode": "NULLABLE",
+                        "type": "BOOLEAN",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "abs_before_epoch",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "or",
+                    "mode": "REPEATED",
+                    "type": "RECORD",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "abs_before",
+                        "mode": "NULLABLE",
+                        "type": "STRING",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "rel_before",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "unconditional",
+                        "mode": "NULLABLE",
+                        "type": "BOOLEAN",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "abs_before_epoch",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "not",
+                    "mode": "REPEATED",
+                    "type": "RECORD",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "abs_before",
+                        "mode": "NULLABLE",
+                        "type": "STRING",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "rel_before",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "unconditional",
+                        "mode": "NULLABLE",
+                        "type": "BOOLEAN",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "abs_before_epoch",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "or",
+                "mode": "REPEATED",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "abs_before",
+                    "mode": "NULLABLE",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "rel_before",
+                    "mode": "NULLABLE",
+                    "type": "INTEGER",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "abs_before_epoch",
+                    "mode": "NULLABLE",
+                    "type": "INTEGER",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "not",
+                    "mode": "REPEATED",
+                    "type": "RECORD",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "abs_before",
+                        "mode": "NULLABLE",
+                        "type": "STRING",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "rel_before",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "unconditional",
+                        "mode": "NULLABLE",
+                        "type": "BOOLEAN",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "abs_before_epoch",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "unconditional",
+                    "mode": "NULLABLE",
+                    "type": "BOOLEAN",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "or",
+                    "mode": "REPEATED",
+                    "type": "RECORD",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "abs_before",
+                        "mode": "NULLABLE",
+                        "type": "STRING",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "rel_before",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "unconditional",
+                        "mode": "NULLABLE",
+                        "type": "BOOLEAN",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "abs_before_epoch",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "and",
+                    "mode": "REPEATED",
+                    "type": "RECORD",
+                    "description": "",
+                    "fields": [
+                      {
+                        "name": "abs_before",
+                        "mode": "NULLABLE",
+                        "type": "STRING",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "rel_before",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "unconditional",
+                        "mode": "NULLABLE",
+                        "type": "BOOLEAN",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "abs_before_epoch",
+                        "mode": "NULLABLE",
+                        "type": "INTEGER",
+                        "description": "",
+                        "fields": []
+                      },
+                      {
+                        "name": "not",
+                        "mode": "REPEATED",
+                        "type": "RECORD",
+                        "description": "",
+                        "fields": [
+                          {
+                            "name": "abs_before",
+                            "mode": "NULLABLE",
+                            "type": "STRING",
+                            "description": "",
+                            "fields": []
+                          },
+                          {
+                            "name": "rel_before",
+                            "mode": "NULLABLE",
+                            "type": "INTEGER",
+                            "description": "",
+                            "fields": []
+                          },
+                          {
+                            "name": "unconditional",
+                            "mode": "NULLABLE",
+                            "type": "BOOLEAN",
+                            "description": "",
+                            "fields": []
+                          },
+                          {
+                            "name": "abs_before_epoch",
+                            "mode": "NULLABLE",
+                            "type": "INTEGER",
+                            "description": "",
+                            "fields": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "data_account_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the account whose data entry is no longer sponsored",
+        "fields": []
+      },
+      {
+        "name": "data_name",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The name of the data entry which is no longer sponsored",
+        "fields": []
+      },
+      {
+        "name": "from",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address from which the payment/contract originates (the sender account)",
+        "fields": []
+      },
+      {
+        "name": "from_muxed",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, the virtual address of the sender account",
+        "fields": []
+      },
+      {
+        "name": "from_muxed_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, the integer representation of the virtual address of the sender account",
+        "fields": []
+      },
+      {
+        "name": "funder",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "When a new account is created, an account address \"funds\" the new account",
+        "fields": []
+      },
+      {
+        "name": "funder_muxed",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, the virtual address of the account funding the new account",
+        "fields": []
+      },
+      {
+        "name": "funder_muxed_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, the integer representation of the account funding the new account",
+        "fields": []
+      },
+      {
+        "name": "high_threshold",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The sum of the weight of all signatures that sign a transaction for the high threshold operation. The weight must exceed the set threshold for the operation to succeed.",
+        "fields": []
+      },
+      {
+        "name": "home_domain",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The home domain used for the stellar.toml file discovery",
+        "fields": []
+      },
+      {
+        "name": "inflation_dest",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address specifying where to send inflation funds. The concept of inflation on the network has been discontinued",
+        "fields": []
+      },
+      {
+        "name": "into",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address receiving the deleted account's lumens. This is the account in which the intended deleted account will be merged",
+        "fields": []
+      },
+      {
+        "name": "into_muxed",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, the virtual address of the account receive the deleted account's lumens",
+        "fields": []
+      },
+      {
+        "name": "into_muxed_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, the integer representation of the account receiving the deleted account's lumens",
+        "fields": []
+      },
+      {
+        "name": "limit",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The upper bound amount of an asset that an account can hold",
+        "fields": []
+      },
+      {
+        "name": "low_threshold",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The sum of the weight of all signatures that sign a transaction for the low threshold operation. The weight must exceed the set threshold for the operation to succeed.",
+        "fields": []
+      },
+      {
+        "name": "master_key_weight",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "An accounts private key is called the master key. For signing transactions, the account holder can specify a weight for the master key, which contributes to thresholds validation when processing a transaction.",
+        "fields": []
+      },
+      {
+        "name": "med_threshold",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The sum of the weight of all signatures that sign a transaction for the medium threshold operation. The weight must exceed the set threshold for the operation to succeed.",
+        "fields": []
+      },
+      {
+        "name": "name",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The manage data operation allows an account to write and store data directly on the ledger in a key value pair format. The name is the key for a data entry.",
+        "fields": []
+      },
+      {
+        "name": "offer_id",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The unique id for the offer. This id can be joined with the 'offers' table",
+        "fields": []
+      },
+      {
+        "name": "path",
+        "mode": "REPEATED",
+        "type": "RECORD",
+        "description": "Path payments maximize the best exchange rate path when sending money from one asset to another asset.The intermediary assets that this path hops through will be reported in the record. This feature is especially useful when the market between the original asset pair is illiquid.",
+        "fields": [
+          {
+            "name": "asset_code",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "asset_issuer",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "asset_type",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          }
+        ]
+      },
+      {
+        "name": "price",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The ratio of selling asset to buying asset. This is a number representing how many units of a selling asset it takes to get 1 unit of a buying asset.",
+        "fields": []
+      },
+      {
+        "name": "price_r",
+        "mode": "NULLABLE",
+        "type": "RECORD",
+        "description": "Precise representation of the buy and sell price of the assets on an offer. The n is the numerator, the d is the denominator. By calculating the ratio of n/d you can calculate the price of the bid or ask",
+        "fields": [
+          {
+            "name": "d",
+            "mode": "NULLABLE",
+            "type": "INTEGER",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "n",
+            "mode": "NULLABLE",
+            "type": "INTEGER",
+            "description": "",
+            "fields": []
+          }
+        ]
+      },
+      {
+        "name": "selling_asset_code",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The 4 or 12 character code representation of the asset that is either sold or offered to sell in a trade",
+        "fields": []
+      },
+      {
+        "name": "selling_asset_issuer",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the original asset issuer that created the asset sold or offered to sell",
+        "fields": []
+      },
+      {
+        "name": "selling_asset_id",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The identifier of the asset being sold in the operation. This field is used in trade and offer operations, where one asset is exchanged for another.",
+        "fields": []
+      },
+      {
+        "name": "selling_asset_type",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The identifier for type of asset code, can be a alphanumeric with 4 characters, 12 characters or the native asset to the network, XLM.",
+        "fields": []
+      },
+      {
+        "name": "set_flags",
+        "mode": "REPEATED",
+        "type": "INTEGER",
+        "description": "Array of numeric values of the flags set for a given trustline in the operation",
+        "fields": []
+      },
+      {
+        "name": "set_flags_s",
+        "mode": "REPEATED",
+        "type": "STRING",
+        "description": "Array of string values of the flags set for a given trustline in the operation",
+        "fields": []
+      },
+      {
+        "name": "signer_account_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The address of the account of the signer no longer sponsored",
+        "fields": []
+      },
+      {
+        "name": "signer_key",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The address of the signer which is no longer sponsored",
+        "fields": []
+      },
+      {
+        "name": "signer_weight",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The weight of the new signer. For transactions, multiple accounts can sign a transaction from a source account. This weight contributes towards calculating whether the transaction exceeds the specified threshold weight to complete the transaction",
+        "fields": []
+      },
+      {
+        "name": "source_amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The originating amount sent designated in the source asset",
+        "fields": []
+      },
+      {
+        "name": "source_asset_code",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The 4 or 12 character code representation of the asset that is originally sent",
+        "fields": []
+      },
+      {
+        "name": "source_asset_issuer",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the original asset issuer that created the asset sent",
+        "fields": []
+      },
+      {
+        "name": "source_asset_id",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The identifier of the source asset in the operation. This is used in payment operations where an asset is transferred or converted from one form to another.",
+        "fields": []
+      },
+      {
+        "name": "source_asset_type",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The identifier for type of asset code, can be a alphanumeric with 4 characters, 12 characters or the native asset to the network, XLM.",
+        "fields": []
+      },
+      {
+        "name": "source_max",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The maxium amount to be sent, designated in the source asset",
+        "fields": []
+      },
+      {
+        "name": "starting_balance",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The amount of XLM to send to the newly created account.",
+        "fields": []
+      },
+      {
+        "name": "to",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The address of the account receiving the payment funds",
+        "fields": []
+      },
+      {
+        "name": "to_muxed",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, the virtual address of the account receiving the payment",
+        "fields": []
+      },
+      {
+        "name": "to_muxed_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the account is multiplexed, the integer representation of the virtual address of the recipient account",
+        "fields": []
+      },
+      {
+        "name": "trustee",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The issuing account address (only present for 'credit' asset types)",
+        "fields": []
+      },
+      {
+        "name": "trustee_muxed",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the issuing account address is multiplexed, the virtual address",
+        "fields": []
+      },
+      {
+        "name": "trustee_muxed_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the issuing account address is multiplexed, the integer representation of the virtual address",
+        "fields": []
+      },
+      {
+        "name": "trustline_account_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The address of the account whose trustline is no longer sponsored",
+        "fields": []
+      },
+      {
+        "name": "trustline_asset",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The asset of the trustline which is no longer sponsored",
+        "fields": []
+      },
+      {
+        "name": "trustor",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The trusting account address, or the account being authorized or unauthorized",
+        "fields": []
+      },
+      {
+        "name": "trustor_muxed",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the trusting account is multiplexed, the virtual address of the account",
+        "fields": []
+      },
+      {
+        "name": "trustor_muxed_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the trusting account is multiplexed, the integer representation of the virtual address",
+        "fields": []
+      },
+      {
+        "name": "value",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The manage data operation allows an account to write and store data directly on the ledger in a key value pair format. The value is the value of a key for a data entry.",
+        "fields": []
+      },
+      {
+        "name": "clear_flags",
+        "mode": "REPEATED",
+        "type": "INTEGER",
+        "description": "Array of numeric values of the flags cleared for a given trustline in the operation. If the flag was originally set, this will delete the flag",
+        "fields": []
+      },
+      {
+        "name": "clear_flags_s",
+        "mode": "REPEATED",
+        "type": "STRING",
+        "description": "Array of string values of the flags cleared for a given trustline in the operation. If the flag was originally set, this will delete the flag",
+        "fields": []
+      },
+      {
+        "name": "destination_min",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The minimum amount to be received, designated in the expected destination asset",
+        "fields": []
+      },
+      {
+        "name": "bump_to",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The new desired value of the source account's sequence number",
+        "fields": []
+      },
+      {
+        "name": "authorize_to_maintain_liabilities",
+        "mode": "NULLABLE",
+        "type": "BOOLEAN",
+        "description": "Indicates whether the trustline is authorized. 0 is if the account is not authorized to transact with the asset in any way. 1 if the account is authorized to transact with the asset. 2 if the account is authorized to maintain orders, but not to perform other transactions.",
+        "fields": []
+      },
+      {
+        "name": "clawback_enabled",
+        "mode": "NULLABLE",
+        "type": "BOOLEAN",
+        "description": "Indicates whether the asset can be clawed back by the asset issuer",
+        "fields": []
+      },
+      {
+        "name": "sponsor",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of another account that maintains the minimum balance in XLM for the source account to complete operations",
+        "fields": []
+      },
+      {
+        "name": "sponsored_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the account which will be sponsored",
+        "fields": []
+      },
+      {
+        "name": "begin_sponsor",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the account which initiated the sponsorship",
+        "fields": []
+      },
+      {
+        "name": "begin_sponsor_muxed",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the initiating sponsorship account is multiplexed, the virtual address",
+        "fields": []
+      },
+      {
+        "name": "begin_sponsor_muxed_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "If the initiating sponsorship account is multiplexed, the integer representation of the virtual address",
+        "fields": []
+      },
+      {
+        "name": "liquidity_pool_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "Unique identifier for a liquidity pool",
+        "fields": []
+      },
+      {
+        "name": "reserve_a_asset_type",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The identifier for type of asset code, can be a alphanumeric with 4 characters, 12 characters or the native asset to the network, XLM.",
+        "fields": []
+      },
+      {
+        "name": "reserve_a_asset_code",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The 4 or 12 character code representation of the asset of one of the two asset pairs in a liquidity pool",
+        "fields": []
+      },
+      {
+        "name": "reserve_a_asset_issuer",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the original asset issuer that created one of the two asset pairs in the liquidity pool",
+        "fields": []
+      },
+      {
+        "name": "reserve_a_asset_id",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The identifier of the first reserve asset in a liquidity pool or similar construct. This field is relevant for operations involving liquidity pools, where multiple assets are pooled together.",
+        "fields": []
+      },
+      {
+        "name": "reserve_a_max_amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The maximum amount of reserve a that can be deposited into the pool.",
+        "fields": []
+      },
+      {
+        "name": "reserve_a_deposit_amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The amount of reserve a that ended up actually deposited into the pool",
+        "fields": []
+      },
+      {
+        "name": "reserve_b_asset_type",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The identifier for type of asset code, can be a alphanumeric with 4 characters, 12 characters or the native asset to the network, XLM.",
+        "fields": []
+      },
+      {
+        "name": "reserve_b_asset_code",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The 4 or 12 character code representation of the asset of one of the two asset pairs in a liquidity pool.",
+        "fields": []
+      },
+      {
+        "name": "reserve_b_asset_issuer",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "The account address of the original asset issuer that created one of the two asset pairs in the liquidity pool.",
+        "fields": []
+      },
+      {
+        "name": "reserve_b_asset_id",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The identifier of the second reserve asset in a liquidity pool or similar construct. This field complements `details.reserve_a_asset_id` in describing the assets involved in a liquidity pool.",
+        "fields": []
+      },
+      {
+        "name": "reserve_b_max_amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The maximum amount of reserve b that can be deposited into the pool.",
+        "fields": []
+      },
+      {
+        "name": "reserve_b_deposit_amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The amount of reserve b that ended up actually deposited into the pool.",
+        "fields": []
+      },
+      {
+        "name": "min_price",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The floating point value indicating the minimum exchange rate for this deposit operation. Reported as Reserve A / Reserve B.",
+        "fields": []
+      },
+      {
+        "name": "min_price_r",
+        "mode": "REPEATED",
+        "type": "RECORD",
+        "description": "A fractional representation of the prices of the two assets in a pool. The n is the numerator (value of asset a) and the d is the denominator (value of asset b).",
+        "fields": [
+          {
+            "name": "d",
+            "mode": "NULLABLE",
+            "type": "INTEGER",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "n",
+            "mode": "NULLABLE",
+            "type": "INTEGER",
+            "description": "",
+            "fields": []
+          }
+        ]
+      },
+      {
+        "name": "max_price",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The floating point value indicating the maximum exchange rate for this deposit operation. Reported as Reserve A / Reserve B.",
+        "fields": []
+      },
+      {
+        "name": "max_price_r",
+        "mode": "REPEATED",
+        "type": "RECORD",
+        "description": "A fractional representation of the prices of the two assets in a pool. The n is the numerator (value of asset a) and the d is the denominator (value of asset b).",
+        "fields": [
+          {
+            "name": "d",
+            "mode": "NULLABLE",
+            "type": "INTEGER",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "n",
+            "mode": "NULLABLE",
+            "type": "INTEGER",
+            "description": "",
+            "fields": []
+          }
+        ]
+      },
+      {
+        "name": "shares_received",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "A floating point number representing the number of pool shares received for this deposit. A pool share is a compilation of both asset a and asset b reserves. It is not possible to own only asset a or asset b in a pool.",
+        "fields": []
+      },
+      {
+        "name": "reserve_a_min_amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The minimum amount of reserve a that can be withdrawn from the pool.",
+        "fields": []
+      },
+      {
+        "name": "reserve_a_withdraw_amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The amount of reserve a that ended up actually withdrawn from the pool.",
+        "fields": []
+      },
+      {
+        "name": "reserve_b_min_amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The minimum amount of reserve b that can be withdrawn from the pool.",
+        "fields": []
+      },
+      {
+        "name": "reserve_b_withdraw_amount",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The amount of reserve b that ended up actually withdrawn from the pool.",
+        "fields": []
+      },
+      {
+        "name": "shares",
+        "mode": "NULLABLE",
+        "type": "FLOAT",
+        "description": "The number of shares withdrawn from the pool. It is not possible to withdraw only asset a or asset b, equal value must be withdrawn from the pool.",
+        "fields": []
+      },
+      {
+        "name": "asset_balance_changes",
+        "mode": "REPEATED",
+        "type": "RECORD",
+        "description": "Soroban field - asset balance changes from invoke host function",
+        "fields": [
+          {
+            "name": "amount",
+            "mode": "NULLABLE",
+            "type": "FLOAT",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "asset_code",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "asset_issuer",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "asset_type",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "from",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "to",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "type",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          }
+        ]
+      },
+      {
+        "name": "parameters",
+        "mode": "REPEATED",
+        "type": "RECORD",
+        "description": "Soroban field - parameters from contract function call",
+        "fields": [
+          {
+            "name": "type",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "value",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          }
+        ]
+      },
+      {
+        "name": "parameters_decoded",
+        "mode": "REPEATED",
+        "type": "RECORD",
+        "description": "",
+        "fields": [
+          {
+            "name": "type",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "value",
+            "mode": "NULLABLE",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          }
+        ]
+      },
+      {
+        "name": "function",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "Soroban field - invoke_host_function function type",
+        "fields": []
+      },
+      {
+        "name": "address",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "Soroban field - address used to create the Soroban contract",
+        "fields": []
+      },
+      {
+        "name": "type",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "Soroban field - type of soroban operation",
+        "fields": []
+      },
+      {
+        "name": "extend_to",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "Soroban field - ledger extended to",
+        "fields": []
+      },
+      {
+        "name": "contract_id",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "Soroban contract id",
+        "fields": []
+      },
+      {
+        "name": "contract_code_hash",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "Soroban contract code hash",
+        "fields": []
+      },
+      {
+        "name": "ledger_key_hash",
+        "mode": "REPEATED",
+        "type": "STRING",
+        "description": "Hash of the ledgerKey which is a subset of the ledgerEntry. The subset of ledgerEntry fields depends on ledgerEntryType.",
+        "fields": []
+      },
+      {
+        "name": "ledgers_to_expire",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "The number of ledgers after which the operation will expire if its not executed.",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "id",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "Unique identifier for an operation.",
+    "fields": []
+  },
+  {
+    "name": "source_account",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The account address that originates the operation",
+    "fields": []
+  },
+  {
+    "name": "source_account_muxed",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "If an account is multiplexed (muxed), the virtual account address that originates the operation",
+    "fields": []
+  },
+  {
+    "name": "transaction_id",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The transaction identifier in which the operation executed. There can be up to 100 operations in a given transaction",
+    "fields": []
+  },
+  {
+    "name": "type",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The identifier for type of asset, can be an alphanumeric with 4 characters, 12 characters or the native asset to the network, XLM.",
+    "fields": []
+  },
+  {
+    "name": "type_string",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The type of operation this operation executes",
+    "fields": []
+  },
+  {
+    "name": "batch_id",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "String representation of the run id for a given DAG in Airflow. Takes the form of \"scheduled__<batch_end_date>-<dag_alias>\". Batch ids are unique to the batch and help with monitoring and rerun capabilities",
+    "fields": []
+  },
+  {
+    "name": "batch_run_date",
+    "mode": "NULLABLE",
+    "type": "DATETIME",
+    "description": "The start date for the batch interval. When taken with the date in the batch_id, the date represents the interval of ledgers processed. The batch run date can be seen as a proxy of closed_at for a ledger.",
+    "fields": []
+  },
+  {
+    "name": "batch_insert_ts",
+    "mode": "NULLABLE",
+    "type": "TIMESTAMP",
+    "description": "The timestamp in UTC when a batch of records was inserted into the database. This field can help identify if a batch executed in real time or as part of a backfill. The timestamp should not be used during ad hoc analysis and is useful for data engineering purposes.",
+    "fields": []
+  },
+  {
+    "name": "closed_at",
+    "mode": "NULLABLE",
+    "type": "TIMESTAMP",
+    "description": "Timestamp in UTC when this ledger closed and committed to the network. Ledgers are expected to close ~every 5 seconds",
+    "fields": []
+  },
+  {
+    "name": "operation_result_code",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "operation_trace_code",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "ledger_sequence",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The sequence number of this ledger. It represents the order of the ledger within the Stellar blockchain. Each ledger has a unique sequence number that increments with every new ledger, ensuring that ledgers are processed in the correct order.",
+    "fields": []
+  },
+  {
+    "name": "details_json",
+    "mode": "NULLABLE",
+    "type": "JSON",
+    "description": "Record that contains details based on the type of operation executed. Each operation will return its own relevant details, with the rest of the details as null",
+    "fields": []
+  }
+]
