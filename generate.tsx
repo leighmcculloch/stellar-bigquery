@@ -34,17 +34,83 @@ function QueryList({ queries }: { queries: Query[] }) {
   );
 }
 
+function getBigQueryUrl(sql: string): string {
+  // Simply create a URL to the BigQuery console
+  // We can't directly pass SQL in the URL because of length restrictions
+  // and encoding issues, so we'll handle it with copy to clipboard instead
+  return "https://console.cloud.google.com/bigquery";
+}
+
+function copyToClipboard(text: string): string {
+  return `
+    navigator.clipboard.writeText(\`${text.replace(/`/g, '\\`')}\`)
+      .then(() => {
+        const btn = document.getElementById('copy-btn-${text.length}');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Copied!';
+        setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+      })
+      .catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+  `;
+}
+
 function QueryDisplay({ query }: { query: Query }) {
+  // Extract filename without extension for GitHub link
+  const filename = query.path.split('/').pop()?.replace('.sql', '') || '';
+  const githubUrl = `https://github.com/leighmcculloch/stellar-bigquery/blob/main/samples/${filename}.sql`;
+  
   return (
     <div className="query-container my-12 bg-white rounded-lg shadow-md overflow-hidden" id={query.name}>
-      <div className="px-6 py-4 bg-indigo-50 border-b border-indigo-100">
-        <h2 className="text-2xl font-bold text-gray-800">{query.displayName}</h2>
-        <p className="text-sm text-gray-600 flex items-center mt-2">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-          </svg>
-          <code className="font-mono text-xs">{query.path}</code>
-        </p>
+      <div className="px-6 py-4 bg-indigo-50 border-b border-indigo-100 flex justify-between items-start">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">{query.displayName}</h2>
+          <div className="flex flex-wrap gap-3 mt-2">
+            <p className="text-sm text-gray-600 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+              </svg>
+              <code className="font-mono text-xs">{query.path}</code>
+            </p>
+            <a 
+              href={githubUrl} 
+              target="_blank"
+              className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center"
+              title="View on GitHub"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 mr-1">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+              </svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button 
+            id={`copy-btn-${query.content.length}`}
+            onClick={copyToClipboard(query.content)}
+            className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm transition-colors duration-200 shadow-sm"
+            title="Copy SQL to clipboard"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+            </svg>
+            Copy SQL
+          </button>
+          <a 
+            href={getBigQueryUrl(query.content)} 
+            target="_blank"
+            className="flex items-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm transition-colors duration-200 shadow-sm"
+            title="Open in BigQuery (copy SQL first)"
+            onClick={`event.preventDefault(); ${copyToClipboard(query.content)}; window.open('${getBigQueryUrl(query.content)}', '_blank');`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-1">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            </svg>
+            Copy & Open BigQuery
+          </a>
+        </div>
       </div>
       <pre className="p-0 m-0 bg-gray-50 overflow-auto">
         <code className="language-sql p-6 block">{query.content}</code>
@@ -97,13 +163,14 @@ function Layout({ queries }: { queries: Query[] }) {
                 <p className="text-sm text-gray-500 mt-1">Generated: {new Date(timestamp).toLocaleString()}</p>
               </div>
               <a 
-                href="https://github.com/leighmcculloch/CodeScratch/tree/main/bigquery" 
+                href="https://github.com/leighmcculloch/stellar-bigquery" 
                 target="_blank"
-                className="text-gray-600 hover:text-gray-900"
+                className="text-gray-600 hover:text-gray-900 flex items-center"
               >
-                <svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor" className="w-6 h-6">
+                <svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor" className="w-5 h-5 mr-2">
                   <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
                 </svg>
+                <span className="text-sm">stellar-bigquery</span>
               </a>
             </div>
           </div>
@@ -135,7 +202,7 @@ function Layout({ queries }: { queries: Query[] }) {
             <p className="text-center text-gray-600 text-sm">
               Generated by Deno JSX • BigQuery SQL Query Explorer •{" "}
               <a 
-                href="https://github.com/leighmcculloch/CodeScratch/tree/main/bigquery" 
+                href="https://github.com/leighmcculloch/stellar-bigquery" 
                 target="_blank"
                 className="text-indigo-600 hover:text-indigo-800 hover:underline"
               >
