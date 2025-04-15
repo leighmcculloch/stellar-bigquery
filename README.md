@@ -10,20 +10,20 @@ This repository contains SQL queries for analyzing muxed account data in BigQuer
 
 ## Generating Static Website
 
-This repository includes a Deno script that generates a static website to view all SQL queries.
+This repository includes a Deno script that generates a static website using JSX to view all SQL queries.
 
 To run locally:
 
 ```bash
 # Install Deno if you haven't already
 # Run the generator script
-deno run --allow-read --allow-write generate.ts
+deno run --allow-read --allow-write generate.tsx
 ```
 
 The generated HTML will be saved to `dist/index.html` by default. You can specify a custom output path:
 
 ```bash
-deno run --allow-read --allow-write generate.ts --output custom/path/index.html
+deno run --allow-read --allow-write generate.tsx --output custom/path/index.html
 ```
 
 ## GitHub Pages Deployment

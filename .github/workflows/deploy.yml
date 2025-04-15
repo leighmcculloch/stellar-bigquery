@@ -30,7 +30,7 @@ jobs:
         uses: actions/configure-pages@v3
 
       - name: Build static site
-        run: deno run --allow-read --allow-write generate.ts --output _site/index.html
+        run: deno run --allow-read --allow-write generate.tsx --output _site/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
