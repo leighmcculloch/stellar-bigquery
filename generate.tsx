@@ -251,10 +251,17 @@ function Layout({ queries }: { queries: Query[] }) {
           <section className="mb-12">
             <div className="bg-white rounded-lg shadow-md p-6 mb-8">
               <p className="text-gray-600 mb-6">
-                A collection of BigQuery queries for the{" "}
+                A collection of BigQuery queries that I,{" "}
+                <a href="https://leighm.cc">Leigh</a>, have found personally
+                helpful for{"  "}
                 <a href="https://developers.stellar.org/docs/data/analytics/hubble">
-                  public Stellar blockchain data
-                </a>.
+                  Stellar Hubble
+                </a>. Stellar Hubble is the public BigQuery repository
+                containing historical/archive data for the{" "}
+                <a href="https://stellar.org">Stellar Network</a>. These queries
+                are not intended for general consumption and collect data
+                specific to the use cases I have encountered. Use at your own
+                risk.
               </p>
               <QueryList queries={queries} />
             </div>
