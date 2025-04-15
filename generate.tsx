@@ -58,8 +58,13 @@ function copyToClipboard(text: string): string {
       .then(() => {
         const btn = document.getElementById('copy-btn-${text.length}');
         const originalText = btn.innerHTML;
+        const originalBg = btn.className;
         btn.innerHTML = 'Copied!';
-        setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+        btn.className = btn.className.replace('bg-gray-100 hover:bg-gray-200', 'bg-green-100 text-green-700');
+        setTimeout(() => { 
+          btn.innerHTML = originalText;
+          btn.className = originalBg;
+        }, 1500);
       })
       .catch(err => {
         console.error('Failed to copy: ', err);
@@ -84,14 +89,14 @@ function QueryDisplay({ query }: { query: Query }) {
             {query.displayName}
           </h2>
           <div className="flex flex-wrap gap-3 mt-2">
-            <p className="text-sm text-gray-600 flex items-center">
+            <span className="inline-flex items-center px-3 py-1 rounded-md bg-gray-100 text-sm text-gray-600">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-4 h-4 mr-1"
+                className="w-4 h-4 mr-1 flex-shrink-0"
               >
                 <path
                   strokeLinecap="round"
@@ -99,12 +104,12 @@ function QueryDisplay({ query }: { query: Query }) {
                   d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
                 />
               </svg>
-              <code className="font-mono text-xs">{query.path}</code>
-            </p>
+              <code className="font-mono text-xs truncate">{query.path}</code>
+            </span>
             <a
               href={githubUrl}
               target="_blank"
-              className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center"
+              className="inline-flex items-center px-3 py-1 rounded-md bg-indigo-50 text-sm text-indigo-600 hover:bg-indigo-100 hover:text-indigo-800 transition-colors duration-200"
               title="View on GitHub"
             >
               <svg
@@ -112,7 +117,7 @@ function QueryDisplay({ query }: { query: Query }) {
                 height="16"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                className="w-4 h-4 mr-1"
+                className="w-4 h-4 mr-1 flex-shrink-0"
               >
                 <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
               </svg>
@@ -124,7 +129,7 @@ function QueryDisplay({ query }: { query: Query }) {
           <button
             id={`copy-btn-${query.content.length}`}
             onClick={copyToClipboard(query.content)}
-            className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm transition-colors duration-200 shadow-sm"
+            className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm transition-colors duration-200 shadow-sm font-medium"
             title="Copy SQL to clipboard"
           >
             <svg
@@ -146,7 +151,7 @@ function QueryDisplay({ query }: { query: Query }) {
           <a
             href={getBigQueryUrl(query.content)}
             target="_blank"
-            className="flex items-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm transition-colors duration-200 shadow-sm"
+            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm transition-colors duration-200 shadow-sm"
             title="Open in BigQuery (copy SQL first)"
             onClick={`event.preventDefault(); ${
               copyToClipboard(query.content)
