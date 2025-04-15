@@ -1,0 +1,310 @@
+[
+  {
+    "name": "id",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "A unique identifier for this transaction.",
+    "fields": []
+  },
+  {
+    "name": "transaction_hash",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "A hex-encoded SHA-256 hash of this transaction's XDR-encoded form.",
+    "fields": []
+  },
+  {
+    "name": "ledger_sequence",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The sequence number of this ledger. It represents the order of the ledger within the Stellar blockchain. Each ledger has a unique sequence number that increments with every new ledger, ensuring that ledgers are processed in the correct order.",
+    "fields": []
+  },
+  {
+    "name": "account",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The account address that originates the transaction.",
+    "fields": []
+  },
+  {
+    "name": "account_sequence",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The source account's sequence number that this transaction consumed. Sequence numbers can only be used once and help maintain atomicity and idempotency on the network.",
+    "fields": []
+  },
+  {
+    "name": "max_fee",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The maximum fee (in stroops) that the source account is willing to pay for the transaction to be included in a ledger. When the network enters surge pricing, this helps determine if a transaction is included in the set.",
+    "fields": []
+  },
+  {
+    "name": "operation_count",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The number of operations contained within this transaction.",
+    "fields": []
+  },
+  {
+    "name": "created_at",
+    "mode": "NULLABLE",
+    "type": "TIMESTAMP",
+    "description": "The date the transaction was created.",
+    "fields": []
+  },
+  {
+    "name": "memo_type",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The type of memo.",
+    "fields": []
+  },
+  {
+    "name": "memo",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "An optional freeform field that attaches a memo to a transaction",
+    "fields": []
+  },
+  {
+    "name": "time_bounds",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "A transaction precondition that can be set to determine when a transaction is valid. The user can set a lower and upper timebound, defined as a UNIX timestamp when the transaction can be executed.",
+    "fields": []
+  },
+  {
+    "name": "successful",
+    "mode": "NULLABLE",
+    "type": "BOOLEAN",
+    "description": "Indicates if this transaction was successful or not",
+    "fields": []
+  },
+  {
+    "name": "fee_charged",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The fee (in stroops) paid by the source account to apply this transaction to the ledger. At minimum, a transaction is charged the total number of operations contained within the transaction, multiplied by the base fee. The minimum base fee is 100 stroops",
+    "fields": []
+  },
+  {
+    "name": "inner_transaction_hash",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "A transaction hash of a transaction wrapped with its signatures for fee-bump transactions",
+    "fields": []
+  },
+  {
+    "name": "fee_account",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "An account that is not the originating source account for a transaction is allowed to pay transaction fees on behalf of the source account.",
+    "fields": []
+  },
+  {
+    "name": "new_max_fee",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "If an account has a fee account, the fee account can specify a maximum fee (in stroops) that it is willing to pay for this account's fees.",
+    "fields": []
+  },
+  {
+    "name": "account_muxed",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "If the user has defined multiplexed (muxed) accounts, the account exists \"virtually\" under a traditional Stellar account address.",
+    "fields": []
+  },
+  {
+    "name": "fee_account_muxed",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "If the fee account that sponsors fee is a multiplexed account, the virtual address will be listed here",
+    "fields": []
+  },
+  {
+    "name": "batch_id",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "String representation of the run id for a given DAG in Airflow. Takes the form of \"scheduled__<batch_end_date>-<dag_alias>\". Batch ids are unique to the batch and help with monitoring and rerun capabilities",
+    "fields": []
+  },
+  {
+    "name": "batch_run_date",
+    "mode": "NULLABLE",
+    "type": "DATETIME",
+    "description": "The start date for the batch interval. When taken with the date in the batch_id, the date represents the interval of ledgers processed. The batch run date can be seen as a proxy of closed_at for a ledger.",
+    "fields": []
+  },
+  {
+    "name": "batch_insert_ts",
+    "mode": "NULLABLE",
+    "type": "TIMESTAMP",
+    "description": "The timestamp in UTC when a batch of records was inserted into the database. This field can help identify if a batch executed in real time or as part of a backfill. The timestamp should not be used during ad hoc analysis and is useful for data engineering purposes.",
+    "fields": []
+  },
+  {
+    "name": "ledger_bounds",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "A transaction precondition that can be set to determine valid conditions for a transaction to be submitted to the network.",
+    "fields": []
+  },
+  {
+    "name": "min_account_sequence",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "A transaction precondition that can be set to determine valid conditions for a transaction to be submitted to the network.",
+    "fields": []
+  },
+  {
+    "name": "min_account_sequence_age",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "A transaction precondition that can be set to determine valid conditions for a transaction to be submitted to the network.",
+    "fields": []
+  },
+  {
+    "name": "min_account_sequence_ledger_gap",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "A transaction precondition that can be set to determine valid conditions for a transaction to be submitted to the network.",
+    "fields": []
+  },
+  {
+    "name": "tx_envelope",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "A base-64 encoded XDR blob of the tx envelope (transaction and its signatures)",
+    "fields": []
+  },
+  {
+    "name": "tx_result",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "A base-64 encoded XDR blob of the tx result",
+    "fields": []
+  },
+  {
+    "name": "tx_meta",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "A base-64 encoded XDR blob of the tx meta",
+    "fields": []
+  },
+  {
+    "name": "tx_fee_meta",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "A base-64 encoded XDR blob of the tx fee meta",
+    "fields": []
+  },
+  {
+    "name": "extra_signers",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "An array of up to two additional signers that must have corresponding signatures for this transaction to be valid",
+    "fields": []
+  },
+  {
+    "name": "resource_fee",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "Part of the transaction fee that is refundable for soroban transactions",
+    "fields": []
+  },
+  {
+    "name": "soroban_resources_instructions",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "Number of CPU instructions the transaction uses",
+    "fields": []
+  },
+  {
+    "name": "soroban_resources_read_bytes",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "Number of bytes read by the transaction",
+    "fields": []
+  },
+  {
+    "name": "soroban_resources_write_bytes",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "Number of bytes read by the transaction",
+    "fields": []
+  },
+  {
+    "name": "closed_at",
+    "mode": "NULLABLE",
+    "type": "TIMESTAMP",
+    "description": "Timestamp in UTC when this ledger closed and committed to the network. Ledgers are expected to close ~every 5 seconds",
+    "fields": []
+  },
+  {
+    "name": "transaction_result_code",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The detailed result code that outlines why a transaction failed. This code is only useful for failed transactions. The full list of domain values can be found [here](https://pkg.go.dev/github.com/stellar/go/xdr#TransactionResultCode).",
+    "fields": []
+  },
+  {
+    "name": "inclusion_fee_bid",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The maximum bid the submitter is willing to pay for inclusion of the transaction. This fee is used to prioritize transactions that are included in the ledger.",
+    "fields": []
+  },
+  {
+    "name": "inclusion_fee_charged",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The fee charged for the transaction to be included in the ledger.",
+    "fields": []
+  },
+  {
+    "name": "resource_fee_refund",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The amount of the resource fee refunded to the transaction submitter. The refundable fees are calculated from rent, events and return value. Refundable fees are charged from teh source account before the transaction is executed and then refunded based on the actual usage.",
+    "fields": []
+  },
+  {
+    "name": "non_refundable_resource_fee_charged",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The amount of the resource fee charged for the transaction that is non-refundable. This fee is deducted from the transaction initiator's account and is not returned, regardless of the transaction's success or failure. It covers the cost of network resources consumed.",
+    "fields": []
+  },
+  {
+    "name": "refundable_resource_fee_charged",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The amount of the resource fee charged for the transaction that is refundable. This fee may be returned to the transaction initiator if certain conditions are met, such as the transaction failing to be included in a ledger.",
+    "fields": []
+  },
+  {
+    "name": "rent_fee_charged",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The fee charged for renting resources on the network, such as storage space for data. This fee is deducted from the transaction initiator's account and is non-refundable, covering the ongoing cost of maintaining the data on the network. A rent fee wouldn't be charged on failed transactions.",
+    "fields": []
+  },
+  {
+    "name": "tx_signers",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "The public keys of the signers who authorized the transaction. This field lists all the signatories that validated and approved the transaction, ensuring it meets the required authorization thresholds.",
+    "fields": []
+  },
+  {
+    "name": "refundable_fee",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The portion of the transaction fee that is refundable under certain conditions. This field indicates the amount that can be returned to the transaction initiator if the transaction does not fully execute or meets specific refund criteria.",
+    "fields": []
+  }
+]
