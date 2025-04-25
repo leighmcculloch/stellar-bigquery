@@ -1,0 +1,121 @@
+[
+  {
+    "name": "transaction_hash",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "A hex-encoded SHA-256 hash of this transaction's XDR-encoded form.",
+    "fields": []
+  },
+  {
+    "name": "transaction_id",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "A unique identifier for this transaction.",
+    "fields": []
+  },
+  {
+    "name": "successful",
+    "mode": "NULLABLE",
+    "type": "BOOLEAN",
+    "description": "Indicates if this transaction was successful or not",
+    "fields": []
+  },
+  {
+    "name": "in_successful_contract_call",
+    "mode": "NULLABLE",
+    "type": "BOOLEAN",
+    "description": "Indicates whether or not the event is in a successful contract call",
+    "fields": []
+  },
+  {
+    "name": "contract_id",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Soroban contract id",
+    "fields": []
+  },
+  {
+    "name": "type",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The operation type that caused the event to be emitted. Check [hubble-docs](https://developers.stellar.org/docs/data/analytics/hubble/data-catalog/data-dictionary/history-operations#column-details) to get list of operation types.",
+    "fields": []
+  },
+  {
+    "name": "type_string",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The string event type",
+    "fields": []
+  },
+  {
+    "name": "topics",
+    "mode": "NULLABLE",
+    "type": "JSON",
+    "description": "The topics part of an event contains identifying information and metadata for the event and generally what the event signifies. For example, for SAC this could be a \"transfer\" event signifying token value movement. The addresses that the token value is being transferred between will also be within the topics as 'to' and 'from' fields.",
+    "fields": []
+  },
+  {
+    "name": "topics_decoded",
+    "mode": "NULLABLE",
+    "type": "JSON",
+    "description": "Decoded, human readable version of the event topic",
+    "fields": []
+  },
+  {
+    "name": "data",
+    "mode": "NULLABLE",
+    "type": "JSON",
+    "description": "The data part of an event is an object that contains the value(s) significant to an event. For example, for SAC this could be the \"amount\" of the token movement from a \"transfer\" event.",
+    "fields": []
+  },
+  {
+    "name": "data_decoded",
+    "mode": "NULLABLE",
+    "type": "JSON",
+    "description": "Decoded, human readable version of the event data object",
+    "fields": []
+  },
+  {
+    "name": "contract_event_xdr",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The base64 encoded XDR of the event",
+    "fields": []
+  },
+  {
+    "name": "batch_id",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "String representation of the run id for a given DAG in Airflow. Takes the form of \"scheduled__<batch_end_date>-<dag_alias>\". Batch ids are unique to the batch and help with monitoring and rerun capabilities",
+    "fields": []
+  },
+  {
+    "name": "batch_run_date",
+    "mode": "NULLABLE",
+    "type": "DATETIME",
+    "description": "The start date for the batch interval. When taken with the date in the batch_id, the date represents the interval of ledgers processed. The batch run date can be seen as a proxy of closed_at for a ledger.",
+    "fields": []
+  },
+  {
+    "name": "batch_insert_ts",
+    "mode": "NULLABLE",
+    "type": "TIMESTAMP",
+    "description": "The timestamp in UTC when a batch of records was inserted into the database. This field can help identify if a batch executed in real time or as part of a backfill. The timestamp should not be used during ad hoc analysis and is useful for data engineering purposes.",
+    "fields": []
+  },
+  {
+    "name": "closed_at",
+    "mode": "NULLABLE",
+    "type": "TIMESTAMP",
+    "description": "Timestamp in UTC when this ledger closed and committed to the network. Ledgers are expected to close ~every 5 seconds",
+    "fields": []
+  },
+  {
+    "name": "ledger_sequence",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The sequence number of this ledger. It represents the order of the ledger within the Stellar blockchain. Each ledger has a unique sequence number that increments with every new ledger, ensuring that ledgers are processed in the correct order.",
+    "fields": []
+  }
+]
