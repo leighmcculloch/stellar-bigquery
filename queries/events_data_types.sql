@@ -14,6 +14,7 @@ data_decoded_types AS (
     data_decoded IS NOT NULL
     AND in_successful_contract_call = TRUE
     AND JSON_VALUE(data_decoded, '$.type') IS NOT NULL
+    AND type_string = 'ContractEventTypeContract'
 ),
 
 -- First, collect type counts
