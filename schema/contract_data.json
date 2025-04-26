@@ -1,0 +1,156 @@
+[
+  {
+    "name": "contract_id",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Soroban contract id",
+    "fields": []
+  },
+  {
+    "name": "contract_key_type",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Contract key type which is an ScVal that can have the following values",
+    "fields": []
+  },
+  {
+    "name": "contract_durability",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Contract can either be temporary or persistent",
+    "fields": []
+  },
+  {
+    "name": "asset_code",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The 4 or 12 character code representation of the asset on the network.",
+    "fields": []
+  },
+  {
+    "name": "asset_issuer",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The account address of the original asset issuer that created the asset.",
+    "fields": []
+  },
+  {
+    "name": "asset_type",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The identifier for type of asset code, can be an alphanumeric with 4 characters, 12 characters or the native asset to the network, XLM.",
+    "fields": []
+  },
+  {
+    "name": "balance_holder",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The address/account that holds the balance of the asset in contract data",
+    "fields": []
+  },
+  {
+    "name": "balance",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The number of units of XLM held by the account",
+    "fields": []
+  },
+  {
+    "name": "last_modified_ledger",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "The ledger sequence number when the ledger entry was last modified. Deletions do not count as a modification and will report the prior modification sequence number",
+    "fields": []
+  },
+  {
+    "name": "ledger_entry_change",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "Code that describes the ledger entry change type that was applied to the ledger entry.",
+    "fields": []
+  },
+  {
+    "name": "deleted",
+    "mode": "NULLABLE",
+    "type": "BOOLEAN",
+    "description": "Indicates whether the ledger entry (account, claimable balance, trust line, offer, liquidity pool) has been deleted or not. Once an entry is deleted, it cannot be recovered.",
+    "fields": []
+  },
+  {
+    "name": "batch_id",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "String representation of the run id for a given DAG in Airflow. Takes the form of \"scheduled__<batch_end_date>-<dag_alias>\". Batch ids are unique to the batch and help with monitoring and rerun capabilities",
+    "fields": []
+  },
+  {
+    "name": "batch_run_date",
+    "mode": "NULLABLE",
+    "type": "DATETIME",
+    "description": "The start date for the batch interval. When taken with the date in the batch_id, the date represents the interval of ledgers processed. The batch run date can be seen as a proxy of closed_at for a ledger.",
+    "fields": []
+  },
+  {
+    "name": "batch_insert_ts",
+    "mode": "NULLABLE",
+    "type": "TIMESTAMP",
+    "description": "The timestamp in UTC when a batch of records was inserted into the database. This field can help identify if a batch executed in real time or as part of a backfill. The timestamp should not be used during ad hoc analysis and is useful for data engineering purposes.",
+    "fields": []
+  },
+  {
+    "name": "closed_at",
+    "mode": "NULLABLE",
+    "type": "TIMESTAMP",
+    "description": "Timestamp in UTC when this ledger closed and committed to the network. Ledgers are expected to close ~every 5 seconds",
+    "fields": []
+  },
+  {
+    "name": "ledger_sequence",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "ledger_key_hash",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "key",
+    "mode": "NULLABLE",
+    "type": "JSON",
+    "description": "The encoded key used to identify a specific piece of contract data. The encoded key has two components (type and value) where type describes the data type and the value describes the encoded value of the data type for the contract data.",
+    "fields": []
+  },
+  {
+    "name": "key_decoded",
+    "mode": "NULLABLE",
+    "type": "JSON",
+    "description": "The human-readable or decoded version of the key. This provides an understandable format of the key, making it easier to interpret and use in analysis.",
+    "fields": []
+  },
+  {
+    "name": "val",
+    "mode": "NULLABLE",
+    "type": "JSON",
+    "description": "The encoded value associated with the key in the contract data. The encoded val has two components (type and value) where type describes the data type and the value describes the encoded value of the data type for the contract data.",
+    "fields": []
+  },
+  {
+    "name": "val_decoded",
+    "mode": "NULLABLE",
+    "type": "JSON",
+    "description": "The human-readable or decoded version of the value. This provides a clear and understandable representation of the value, making it easier to interpret and use in analysis.",
+    "fields": []
+  },
+  {
+    "name": "contract_data_xdr",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "The XDR (External Data Representation) encoding of the contract data. XDR is a standard format used to serialize and deserialize data, ensuring interoperability across different systems. This field contains the raw, serialized contract data in XDR format.",
+    "fields": []
+  }
+]
