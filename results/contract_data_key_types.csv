@@ -1,0 +1,11 @@
+key_type,count,sample_key_decoded
+Vec,31055486,"{""type"":""Vec"",""value"":""[Pail CAGQT5FIQLMYBZEEJC3IHATYLFN3ZWDN7F2JNVZ6ZZ2GJ3UWFPVP5YH5 38328]""}"
+U128,3470045,"{""type"":""U128"",""value"":""79228162643391546111248094848""}"
+LedgerKeyContractInstance,2374095,"{""type"":"""",""value"":""(LedgerKeyContractInstance)""}"
+U32,188335,"{""type"":""U32"",""value"":""2""}"
+Sym,9812,"{""type"":""Sym"",""value"":""SUPPLY""}"
+Address,7528,"{""type"":""Address"",""value"":""GAJKPYDY6FMU3ETK2LSN6Z4PXSH6VLZX3M7NMANX5FTE7YOA2MYY43KS""}"
+Str,1647,"{""type"":""Str"",""value"":""96194264218""}"
+U64,66,"{""type"":""U64"",""value"":""12""}"
+Bytes,51,"{""type"":""Bytes"",""value"":""8f9966549f1e2bb4ebcaead301688fea0688476a""}"
+Map,40,"{""type"":""Map"",""value"":""[{index 0} {recipient GARX7YOCGEIOA5YQXCHA6ZM7764KLCFRVTTQJQZMPLJPCZKHY4KATVM3}]""}"
