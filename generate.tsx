@@ -184,34 +184,52 @@ function QueryDisplay({ query }: { query: Query }) {
           <div className="flex border-b border-gray-200">
             <button 
               className="py-2 px-4 font-medium text-sm focus:outline-none tab-btn active"
-              data-target={`query-content-${query.name}`}
+              data-target={`${query.name}-query`}
+              data-query-name={query.name}
               onClick={`
                 // Toggle tabs
-                const tabBtns = document.querySelectorAll('[data-target^="${query.name}-"]');
-                tabBtns.forEach(btn => btn.classList.remove('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600'));
-                event.currentTarget.classList.add('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600');
+                const button = event.currentTarget;
+                const tabContainer = button.closest('.flex');
+                const queryName = button.getAttribute('data-query-name');
+                const targetId = button.getAttribute('data-target');
+                
+                // Deactivate all buttons in this tab group
+                const siblingBtns = tabContainer.querySelectorAll('.tab-btn');
+                siblingBtns.forEach(btn => btn.classList.remove('active'));
+                
+                // Activate clicked button
+                button.classList.add('active');
                 
                 // Show selected content, hide others
                 const contents = document.querySelectorAll('[id^="${query.name}-"]');
                 contents.forEach(content => content.classList.add('hidden'));
-                document.getElementById('${query.name}-query').classList.remove('hidden');
+                document.getElementById(targetId).classList.remove('hidden');
               `}
             >
               Query
             </button>
             <button 
               className="py-2 px-4 font-medium text-sm focus:outline-none tab-btn"
-              data-target={`result-content-${query.name}`}
+              data-target={`${query.name}-result`}
+              data-query-name={query.name}
               onClick={`
                 // Toggle tabs
-                const tabBtns = document.querySelectorAll('[data-target^="${query.name}-"]');
-                tabBtns.forEach(btn => btn.classList.remove('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600'));
-                event.currentTarget.classList.add('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600');
+                const button = event.currentTarget;
+                const tabContainer = button.closest('.flex');
+                const queryName = button.getAttribute('data-query-name');
+                const targetId = button.getAttribute('data-target');
+                
+                // Deactivate all buttons in this tab group
+                const siblingBtns = tabContainer.querySelectorAll('.tab-btn');
+                siblingBtns.forEach(btn => btn.classList.remove('active'));
+                
+                // Activate clicked button
+                button.classList.add('active');
                 
                 // Show selected content, hide others
                 const contents = document.querySelectorAll('[id^="${query.name}-"]');
                 contents.forEach(content => content.classList.add('hidden'));
-                document.getElementById('${query.name}-result').classList.remove('hidden');
+                document.getElementById(targetId).classList.remove('hidden');
               `}
             >
               Results
@@ -449,7 +467,7 @@ function Layout({ queries }: { queries: Query[] }) {
             // Initialize tabs - set first tab as active for each query container
             document.querySelectorAll('.tab-btn').forEach(btn => {
               if (btn.textContent.trim() === 'Query') {
-                btn.classList.add('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600');
+                btn.classList.add('active');
               }
             });
             
