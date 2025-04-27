@@ -1,6 +1,6 @@
 /** @jsx h */
 /** @jsxFrag Fragment */
-import { h } from "npm:preact";
+import { h, Fragment } from "npm:preact";
 import { renderToString } from "npm:preact-render-to-string";
 import { walk } from "jsr:@std/fs";
 import { basename, extname } from "jsr:@std/path";
@@ -11,6 +11,7 @@ type Query = {
   path: string;
   content: string;
   displayName: string;
+  result?: string;
 };
 
 function QueryList({ queries }: { queries: Query[] }) {
@@ -77,6 +78,7 @@ function QueryDisplay({ query }: { query: Query }) {
   const filename = query.path.split("/").pop()?.replace(".sql", "") || "";
   const githubUrl =
     `https://github.com/leighmcculloch/stellar-bigquery/blob/main/queries/${filename}.sql`;
+  const hasResult = !!query.result;
 
   return (
     <div
@@ -175,10 +177,101 @@ function QueryDisplay({ query }: { query: Query }) {
           </a>
         </div>
       </div>
-      <pre className="p-0 m-0 bg-gray-50 overflow-auto">
-        <code className="language-sql p-6 block">{query.content}</code>
-      </pre>
+      
+      {/* Tabs for Query and Results */}
+      {hasResult ? (
+        <div>
+          <div className="flex border-b border-gray-200">
+            <button 
+              className="py-2 px-4 font-medium text-sm focus:outline-none tab-btn active"
+              data-target={`query-content-${query.name}`}
+              onClick={`
+                // Toggle tabs
+                const tabBtns = document.querySelectorAll('[data-target^="${query.name}-"]');
+                tabBtns.forEach(btn => btn.classList.remove('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600'));
+                event.currentTarget.classList.add('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600');
+                
+                // Show selected content, hide others
+                const contents = document.querySelectorAll('[id^="${query.name}-"]');
+                contents.forEach(content => content.classList.add('hidden'));
+                document.getElementById('${query.name}-query').classList.remove('hidden');
+              `}
+            >
+              Query
+            </button>
+            <button 
+              className="py-2 px-4 font-medium text-sm focus:outline-none tab-btn"
+              data-target={`result-content-${query.name}`}
+              onClick={`
+                // Toggle tabs
+                const tabBtns = document.querySelectorAll('[data-target^="${query.name}-"]');
+                tabBtns.forEach(btn => btn.classList.remove('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600'));
+                event.currentTarget.classList.add('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600');
+                
+                // Show selected content, hide others
+                const contents = document.querySelectorAll('[id^="${query.name}-"]');
+                contents.forEach(content => content.classList.add('hidden'));
+                document.getElementById('${query.name}-result').classList.remove('hidden');
+              `}
+            >
+              Results
+            </button>
+          </div>
+          
+          <div id={`${query.name}-query`} className="tab-content">
+            <pre className="p-0 m-0 bg-gray-50 overflow-auto">
+              <code className="language-sql p-6 block">{query.content}</code>
+            </pre>
+          </div>
+          
+          <div id={`${query.name}-result`} className="tab-content hidden">
+            <div className="p-6 bg-gray-50 overflow-auto">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  {query.result && renderCsvTable(query.result)}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <pre className="p-0 m-0 bg-gray-50 overflow-auto">
+          <code className="language-sql p-6 block">{query.content}</code>
+        </pre>
+      )}
     </div>
+  );
+}
+
+function renderCsvTable(csvContent: string) {
+  const lines = csvContent.trim().split('\n');
+  const headers = lines[0].split(',');
+  const rows = lines.slice(1);
+  
+  return (
+    <>
+      <thead className="bg-gray-100">
+        <tr>
+          {headers.map((header, i) => (
+            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" key={i}>
+              {header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody className="bg-white divide-y divide-gray-200">
+        {rows.map((row, i) => {
+          const cells = row.split(',');
+          return (
+            <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+              {cells.map((cell, j) => (
+                <td className="px-4 py-3 text-sm text-gray-500" key={j}>{cell}</td>
+              ))}
+            </tr>
+          );
+        })}
+      </tbody>
+    </>
   );
 }
 
@@ -213,6 +306,22 @@ function Layout({ queries }: { queries: Query[] }) {
           }
         `}
         </script>
+        <style>
+          {`
+            /* Tab styling */
+            .tab-btn.active {
+              border-bottom: 2px solid #6366f1;
+              color: #4f46e5;
+            }
+            .tab-btn:not(.active) {
+              color: #6b7280;
+            }
+            .tab-btn:not(.active):hover {
+              color: #4f46e5;
+              background-color: #f9fafb;
+            }
+          `}
+        </style>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -337,6 +446,13 @@ function Layout({ queries }: { queries: Query[] }) {
           document.addEventListener('DOMContentLoaded', () => {
             hljs.highlightAll();
             
+            // Initialize tabs - set first tab as active for each query container
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+              if (btn.textContent.trim() === 'Query') {
+                btn.classList.add('active', 'border-b-2', 'border-indigo-500', 'text-indigo-600');
+              }
+            });
+            
             // Add smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
               anchor.addEventListener('click', function(e) {
@@ -370,6 +486,24 @@ function Layout({ queries }: { queries: Query[] }) {
 
 async function generateHtml(): Promise<string> {
   const queries: Query[] = [];
+  const resultFiles = new Map<string, string>();
+
+  // Collect result files first
+  try {
+    for await (
+      const entry of walk("./results", {
+        includeDirs: false,
+        exts: [".csv"],
+      })
+    ) {
+      const name = basename(entry.path, ".csv");
+      const content = await Deno.readTextFile(entry.path);
+      resultFiles.set(name, content);
+    }
+  } catch (error) {
+    // Handle case where results directory might not exist
+    console.error(`Warning: Error accessing results directory: ${error.message}`);
+  }
 
   // Walk through the queries directory and collect SQL files
   for await (
@@ -381,7 +515,11 @@ async function generateHtml(): Promise<string> {
     const name = basename(entry.path, ".sql");
     const displayName = name.replace(/_/g, " ");
     const content = await Deno.readTextFile(entry.path);
-    queries.push({ name, path: entry.path, content, displayName });
+    
+    // Check if there's a matching result file
+    const result = resultFiles.has(name) ? resultFiles.get(name) : undefined;
+    
+    queries.push({ name, path: entry.path, content, displayName, result });
   }
 
   // Sort queries alphabetically
