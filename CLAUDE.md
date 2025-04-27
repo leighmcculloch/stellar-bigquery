@@ -8,6 +8,7 @@ This repository contains SQL queries for BigQuery used for querying Stellar bloc
 
 - SQL queries in the `queries/` directory
 - Schema files in the `schema/` directory
+- Results from running the queries are in the `results/` directory
 - A Deno script (`generate.tsx`) that generates a static website to display the SQL queries
 
 The schema and queries in this repository refer to and use the publicly available Stellar blockchain BigQuery data.
