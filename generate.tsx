@@ -13,6 +13,7 @@ type Query = {
   content: string;
   displayName: string;
   result?: string;
+  generatedAt?: string; // Timestamp when the results were generated
 };
 
 function QueryList({ queries }: { queries: Query[] }) {
@@ -244,6 +245,22 @@ function QueryDisplay({ query }: { query: Query }) {
           </div>
           
           <div id={`${query.name}-result`} className="tab-content hidden">
+            {/* Warning banner for historical data */}
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-sm">
+              <p className="font-bold">Heads up!</p>
+              <p className="text-sm">
+                These results were generated{' '}
+                {query.generatedAt ? (
+                  <>
+                    on <span className="font-medium">{query.generatedAt}</span> and are
+                  </>
+                ) : (
+                  'at an earlier time and are'
+                )}{' '}
+                not automatically updated. For the most current data, please run the query directly against BigQuery.
+              </p>
+            </div>
+            
             <div className="p-6 bg-gray-50 overflow-auto">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -591,6 +608,7 @@ function Layout({ queries }: { queries: Query[] }) {
 async function generateHtml(): Promise<string> {
   const queries: Query[] = [];
   const resultFiles = new Map<string, string>();
+  const resultTimestamps = new Map<string, string>();
 
   // Collect result files first
   try {
@@ -603,6 +621,23 @@ async function generateHtml(): Promise<string> {
       const name = basename(entry.path, ".csv");
       const content = await Deno.readTextFile(entry.path);
       resultFiles.set(name, content);
+      
+      // Get file modification time for the timestamp
+      try {
+        const fileInfo = await Deno.stat(entry.path);
+        if (fileInfo.mtime) {
+          // Format the date nicely
+          const date = new Date(fileInfo.mtime);
+          const formattedDate = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+          resultTimestamps.set(name, formattedDate);
+        }
+      } catch (statError) {
+        console.error(`Warning: Could not get file info for ${entry.path}: ${statError.message}`);
+      }
     }
   } catch (error) {
     // Handle case where results directory might not exist
@@ -622,8 +657,9 @@ async function generateHtml(): Promise<string> {
     
     // Check if there's a matching result file
     const result = resultFiles.has(name) ? resultFiles.get(name) : undefined;
+    const generatedAt = resultTimestamps.has(name) ? resultTimestamps.get(name) : undefined;
     
-    queries.push({ name, path: entry.path, content, displayName, result });
+    queries.push({ name, path: entry.path, content, displayName, result, generatedAt });
   }
 
   // Sort queries alphabetically
