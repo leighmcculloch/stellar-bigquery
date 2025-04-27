@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@std/assert@0.224": "0.224.0",
     "jsr:@std/assert@1": "1.0.12",
+    "jsr:@std/csv@*": "1.0.3",
     "jsr:@std/flags@*": "0.224.0",
     "jsr:@std/flags@0.224": "0.224.0",
     "jsr:@std/fs@*": "1.0.16",
@@ -24,6 +25,9 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@std/csv@1.0.3": {
+      "integrity": "623acf0dcb88d62ba727c3611ad005df7f109ede8cac833e3986f540744562e5"
     },
     "@std/flags@0.224.0": {
       "integrity": "d40eaf58c356b2e1313c6d4e62dc28b614aad2ddae6f5ff72a969e0b1f5ad689",
