@@ -55,19 +55,23 @@ function getBigQueryUrl(sql: string): string {
   return "https://console.cloud.google.com/bigquery";
 }
 
-function copyToClipboard(text: string): string {
+function copyToClipboard(text: string, buttonId: string = null): string {
   return `
     navigator.clipboard.writeText(\`${text.replace(/`/g, "\\`")}\`)
       .then(() => {
-        const btn = document.getElementById('copy-btn-${text.length}');
-        const originalText = btn.innerHTML;
-        const originalBg = btn.className;
-        btn.innerHTML = 'Copied!';
-        btn.className = btn.className.replace('bg-gray-100 hover:bg-gray-200', 'bg-green-100 text-green-700');
-        setTimeout(() => { 
-          btn.innerHTML = originalText;
-          btn.className = originalBg;
-        }, 1500);
+        if ('${buttonId}') {
+          const btn = document.getElementById('${buttonId}');
+          if (btn) {
+            const originalText = btn.innerHTML;
+            const originalBg = btn.className;
+            btn.innerHTML = 'Copied!';
+            btn.className = btn.className.replace('bg-gray-100 hover:bg-gray-200', 'bg-green-100 text-green-700');
+            setTimeout(() => { 
+              btn.innerHTML = originalText;
+              btn.className = originalBg;
+            }, 1500);
+          }
+        }
       })
       .catch(err => {
         console.error('Failed to copy: ', err);
@@ -129,69 +133,24 @@ function QueryDisplay({ query }: { query: Query }) {
             </a>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button
-            id={`copy-btn-${query.content.length}`}
-            onClick={copyToClipboard(query.content)}
-            className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm transition-colors duration-200 shadow-sm font-medium"
-            title="Copy SQL to clipboard"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5 mr-1"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"
-              />
-            </svg>
-            Copy
-          </button>
-          <a
-            href={getBigQueryUrl(query.content)}
-            target="_blank"
-            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm transition-colors duration-200 shadow-sm"
-            title="Open in BigQuery (copy SQL first)"
-            onClick={`event.preventDefault(); ${
-              copyToClipboard(query.content)
-            }; window.open('${getBigQueryUrl(query.content)}', '_blank');`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5 mr-1"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-              />
-            </svg>
-            Copy & Open BigQuery
-          </a>
-        </div>
       </div>
       
       {/* Tabs for Query and Results */}
       {hasResult ? (
         <div>
-          <div className="flex border-b border-gray-200">
+          {/* Tab Header with Relative Positioning for Button Container */}
+          <div className="relative flex border-b border-gray-200">
+            {/* Tab Buttons */}
             <button 
               className="py-2 px-4 font-medium text-sm focus:outline-none tab-btn active"
+              data-tab-type="query"
               data-target={`${query.name}-query`}
               data-query-name={query.name}
               onClick={`
                 // Toggle tabs
                 const button = event.currentTarget;
-                const tabContainer = button.closest('.flex');
+                const tabType = button.getAttribute('data-tab-type');
+                const tabContainer = button.closest('.relative');
                 const queryName = button.getAttribute('data-query-name');
                 const targetId = button.getAttribute('data-target');
                 
@@ -206,18 +165,37 @@ function QueryDisplay({ query }: { query: Query }) {
                 const contents = document.querySelectorAll('[id^="${query.name}-"]');
                 contents.forEach(content => content.classList.add('hidden'));
                 document.getElementById(targetId).classList.remove('hidden');
+                
+                // Show/hide action buttons based on active tab
+                const actionContainer = tabContainer.querySelector('.tab-actions');
+                if (actionContainer) {
+                  const allActionButtons = actionContainer.querySelectorAll('button, a');
+                  allActionButtons.forEach(btn => btn.style.display = 'none');
+                  
+                  if (tabType === 'query') {
+                    const sqlBtn = actionContainer.querySelector('#copy-sql-${query.name}');
+                    const bqBtn = actionContainer.querySelector('#copy-bq-${query.name}');
+                    if (sqlBtn) sqlBtn.style.display = 'inline-flex';
+                    if (bqBtn) bqBtn.style.display = 'inline-flex';
+                  } else if (tabType === 'result') {
+                    const csvBtn = actionContainer.querySelector('#copy-csv-${query.name}');
+                    if (csvBtn) csvBtn.style.display = 'inline-flex';
+                  }
+                }
               `}
             >
               Query
             </button>
             <button 
               className="py-2 px-4 font-medium text-sm focus:outline-none tab-btn"
+              data-tab-type="result"
               data-target={`${query.name}-result`}
               data-query-name={query.name}
               onClick={`
                 // Toggle tabs
                 const button = event.currentTarget;
-                const tabContainer = button.closest('.flex');
+                const tabType = button.getAttribute('data-tab-type');
+                const tabContainer = button.closest('.relative');
                 const queryName = button.getAttribute('data-query-name');
                 const targetId = button.getAttribute('data-target');
                 
@@ -232,12 +210,79 @@ function QueryDisplay({ query }: { query: Query }) {
                 const contents = document.querySelectorAll('[id^="${query.name}-"]');
                 contents.forEach(content => content.classList.add('hidden'));
                 document.getElementById(targetId).classList.remove('hidden');
+                
+                // Show/hide action buttons based on active tab
+                const actionContainer = tabContainer.querySelector('.tab-actions');
+                if (actionContainer) {
+                  const allActionButtons = actionContainer.querySelectorAll('button, a');
+                  allActionButtons.forEach(btn => btn.style.display = 'none');
+                  
+                  if (tabType === 'query') {
+                    const sqlBtn = actionContainer.querySelector('#copy-sql-${query.name}');
+                    const bqBtn = actionContainer.querySelector('#copy-bq-${query.name}');
+                    if (sqlBtn) sqlBtn.style.display = 'inline-flex';
+                    if (bqBtn) bqBtn.style.display = 'inline-flex';
+                  } else if (tabType === 'result') {
+                    const csvBtn = actionContainer.querySelector('#copy-csv-${query.name}');
+                    if (csvBtn) csvBtn.style.display = 'inline-flex';
+                  }
+                }
               `}
             >
               Results
             </button>
+            
+            {/* Action Buttons Container */}
+            <div className="tab-actions absolute top-0 right-0 pt-1 pr-1 flex gap-1">
+              {/* Copy SQL Button */}
+              <button
+                id={`copy-sql-${query.name}`}
+                onClick={copyToClipboard(query.content, `copy-sql-${query.name}`)}
+                className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs transition-colors duration-200 shadow-sm font-medium"
+                title="Copy SQL to clipboard"
+                style="display: inline-flex;" // Show by default for Query tab
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                </svg>
+                Copy
+              </button>
+              
+              {/* Copy & Open BigQuery Button */}
+              <a
+                id={`copy-bq-${query.name}`}
+                href={getBigQueryUrl(query.content)}
+                target="_blank"
+                className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs transition-colors duration-200 shadow-sm font-medium"
+                title="Copy SQL & Open in BigQuery"
+                style="display: inline-flex;" // Show by default for Query tab
+                onClick={`event.preventDefault(); ${
+                  copyToClipboard(query.content)
+                }; window.open('${getBigQueryUrl(query.content)}', '_blank');`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+                Open BQ
+              </a>
+              
+              {/* Copy CSV Button */}
+              <button
+                id={`copy-csv-${query.name}`}
+                onClick={copyToClipboard(query.result, `copy-csv-${query.name}`)}
+                className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs transition-colors duration-200 shadow-sm font-medium"
+                title="Copy CSV to clipboard"
+                style="display: none;" // Hidden by default, shown when Results tab is active
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                </svg>
+                Copy CSV
+              </button>
+            </div>
           </div>
           
+          {/* Tab Content Panes */}
           <div id={`${query.name}-query`} className="tab-content">
             <pre className="p-0 m-0 bg-gray-50 overflow-auto">
               <code className="language-sql p-6 block">{query.content}</code>
@@ -271,9 +316,51 @@ function QueryDisplay({ query }: { query: Query }) {
           </div>
         </div>
       ) : (
-        <pre className="p-0 m-0 bg-gray-50 overflow-auto">
-          <code className="language-sql p-6 block">{query.content}</code>
-        </pre>
+        <div>
+          {/* Single Tab with Buttons for Query-only view */}
+          <div className="relative flex border-b border-gray-200">
+            <div className="py-2 px-4 font-medium text-sm focus:outline-none tab-btn active">
+              Query
+            </div>
+            
+            {/* Action Buttons Container */}
+            <div className="tab-actions absolute top-0 right-0 pt-1 pr-1 flex gap-1">
+              {/* Copy SQL Button */}
+              <button
+                id={`copy-sql-solo-${query.name}`}
+                onClick={copyToClipboard(query.content, `copy-sql-solo-${query.name}`)}
+                className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs transition-colors duration-200 shadow-sm font-medium"
+                title="Copy SQL to clipboard"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                </svg>
+                Copy
+              </button>
+              
+              {/* Copy & Open BigQuery Button */}
+              <a
+                id={`copy-bq-solo-${query.name}`}
+                href={getBigQueryUrl(query.content)}
+                target="_blank"
+                className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs transition-colors duration-200 shadow-sm font-medium"
+                title="Copy SQL & Open in BigQuery"
+                onClick={`event.preventDefault(); ${
+                  copyToClipboard(query.content)
+                }; window.open('${getBigQueryUrl(query.content)}', '_blank');`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+                Open BQ
+              </a>
+            </div>
+          </div>
+          
+          <pre className="p-0 m-0 bg-gray-50 overflow-auto">
+            <code className="language-sql p-6 block">{query.content}</code>
+          </pre>
+        </div>
       )}
     </div>
   );
@@ -399,209 +486,118 @@ function cleanupValue(value: string): string {
 function Layout({ queries }: { queries: Query[] }) {
   const timestamp = new Date().toISOString();
   return (
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Leigh's Stellar BigQuery Queries</title>
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.min.css"
-        />
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js">
-        </script>
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/sql.min.js">
-        </script>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-          {`
-          tailwind.config = {
-            theme: {
-              extend: {
-                fontFamily: {
-                  sans: ['Inter', 'Segoe UI', 'system-ui', 'sans-serif'],
-                  mono: ['JetBrains Mono', 'Menlo', 'Consolas', 'monospace']
-                }
-              }
-            }
-          }
-        `}
-        </script>
-        <style>
-          {`
-            /* Tab styling */
-            .tab-btn.active {
-              border-bottom: 2px solid #6366f1;
-              color: #4f46e5;
-            }
-            .tab-btn:not(.active) {
-              color: #6b7280;
-            }
-            .tab-btn:not(.active):hover {
-              color: #4f46e5;
-              background-color: #f9fafb;
-            }
-          `}
-        </style>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="bg-gray-50 min-h-screen" id="top">
-        <header className="bg-white border-b border-gray-200 z-10 shadow-sm">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">
-                  Leigh's Stellar BigQuery Queries
-                </h1>
-                <p className="text-sm text-gray-500 mt-1">
-                  Updated: {new Date(timestamp).toLocaleString()}
-                </p>
-              </div>
-              <a
-                href="https://github.com/leighmcculloch/stellar-bigquery"
-                target="_blank"
-                className="text-gray-600 hover:text-gray-900 flex items-center"
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-5 h-5 mr-2"
-                >
-                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
-                </svg>
-                <span className="text-sm">leighmcculloch/stellar-bigquery</span>
-              </a>
-            </div>
-          </div>
-        </header>
-
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <section className="mb-12">
-            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                A collection of BigQuery queries that I,{" "}
-                <a
-                  href="https://leighm.cc"
-                  target="_blank"
-                  className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
-                >
-                  Leigh
-                </a>, have found personally helpful when using{" "}
-                <a
-                  href="https://developers.stellar.org/docs/data/analytics/hubble"
-                  target="_blank"
-                  className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
-                >
-                  Stellar Hubble
-                </a>. Stellar Hubble is the public BigQuery repository
-                containing historical/archive data for the{" "}
-                <a
-                  href="https://stellar.org"
-                  target="_blank"
-                  className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
-                >
-                  Stellar Network
-                </a>. These queries are not intended for general consumption and
-                collect data specific to the use cases I have encountered. Use
-                at your own risk.
+    <Fragment>
+      <header className="bg-white border-b border-gray-200 z-10 shadow-sm">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">
+                Leigh's Stellar BigQuery Queries
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">
+                Updated: {new Date(timestamp).toLocaleString()}
               </p>
-              <QueryList queries={queries} />
             </div>
-          </section>
-
-          <section>
-            {queries.map((query) => (
-              <QueryDisplay
-                key={query.name}
-                query={query}
-              />
-            ))}
-          </section>
-        </main>
-
-        <footer className="bg-white border-t border-gray-200 mt-12">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <p className="text-center text-gray-600 text-sm">
-              Leigh's Stellar BigQuery Queries •{" "}
-              <a
-                href="https://github.com/leighmcculloch/stellar-bigquery"
-                target="_blank"
-                className="text-indigo-600 hover:text-indigo-800 hover:underline"
+            <a
+              href="https://github.com/leighmcculloch/stellar-bigquery"
+              target="_blank"
+              className="text-gray-600 hover:text-gray-900 flex items-center"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="w-5 h-5 mr-2"
               >
-                GitHub Repository
-              </a>
-            </p>
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+              </svg>
+              <span className="text-sm">leighmcculloch/stellar-bigquery</span>
+            </a>
           </div>
-        </footer>
+        </div>
+      </header>
 
-        <button
-          onClick="window.scrollTo({top: 0, behavior: 'smooth'})"
-          className="fixed bottom-4 right-4 bg-indigo-600 text-white p-2 rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          id="back-to-top"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="w-5 h-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m4.5 15.75 7.5-7.5 7.5 7.5"
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section className="mb-12">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              A collection of BigQuery queries that I,{" "}
+              <a
+                href="https://leighm.cc"
+                target="_blank"
+                className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
+              >
+                Leigh
+              </a>, have found personally helpful when using{" "}
+              <a
+                href="https://developers.stellar.org/docs/data/analytics/hubble"
+                target="_blank"
+                className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
+              >
+                Stellar Hubble
+              </a>. Stellar Hubble is the public BigQuery repository
+              containing historical/archive data for the{" "}
+              <a
+                href="https://stellar.org"
+                target="_blank"
+                className="text-indigo-600 hover:text-indigo-800 hover:underline font-medium"
+              >
+                Stellar Network
+              </a>. These queries are not intended for general consumption and
+              collect data specific to the use cases I have encountered. Use
+              at your own risk.
+            </p>
+            <QueryList queries={queries} />
+          </div>
+        </section>
+
+        <section>
+          {queries.map((query) => (
+            <QueryDisplay
+              key={query.name}
+              query={query}
             />
-          </svg>
-        </button>
+          ))}
+        </section>
+      </main>
 
-        <script>
-          {`
-          document.addEventListener('DOMContentLoaded', () => {
-            hljs.highlightAll();
-            
-            // Initialize tabs - set first tab as active for each query container
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-              if (btn.textContent.trim() === 'Query') {
-                btn.classList.add('active');
-              }
-            });
-            
-            // Add smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-              anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                  window.scrollTo({
-                    top: target.offsetTop - 80,
-                    behavior: 'smooth'
-                  });
-                }
-              });
-            });
-            
-            // Show/hide back to top button
-            const backToTopButton = document.getElementById('back-to-top');
-            window.addEventListener('scroll', () => {
-              if (window.scrollY > 300) {
-                backToTopButton.classList.remove('hidden');
-              } else {
-                backToTopButton.classList.add('hidden');
-              }
-            });
-          });
-        `}
-        </script>
-      </body>
-    </html>
+      <footer className="bg-white border-t border-gray-200 mt-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <p className="text-center text-gray-600 text-sm">
+            Leigh's Stellar BigQuery Queries •{" "}
+            <a
+              href="https://github.com/leighmcculloch/stellar-bigquery"
+              target="_blank"
+              className="text-indigo-600 hover:text-indigo-800 hover:underline"
+            >
+              GitHub Repository
+            </a>
+          </p>
+        </div>
+      </footer>
+
+      <button
+        onClick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        className="fixed bottom-4 right-4 bg-indigo-600 text-white p-2 rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        id="back-to-top"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="m4.5 15.75 7.5-7.5 7.5 7.5"
+          />
+        </svg>
+      </button>
+    </Fragment>
   );
 }
 
@@ -665,9 +661,124 @@ async function generateHtml(): Promise<string> {
   // Sort queries alphabetically
   queries.sort((a, b) => a.name.localeCompare(b.name));
 
-  // Generate HTML using JSX
-  const html = "<!DOCTYPE html>\n" +
-    renderToString(<Layout queries={queries} />);
+  // Create HTML head section
+  const headContent = `
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leigh's Stellar BigQuery Queries</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/sql.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'Segoe UI', 'system-ui', 'sans-serif'],
+              mono: ['JetBrains Mono', 'Menlo', 'Consolas', 'monospace']
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Tab styling */
+      .tab-btn.active {
+        border-bottom: 2px solid #6366f1;
+        color: #4f46e5;
+      }
+      .tab-btn:not(.active) {
+        color: #6b7280;
+      }
+      .tab-btn:not(.active):hover {
+        color: #4f46e5;
+        background-color: #f9fafb;
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  `;
+  
+  // Generate the body content using Preact
+  const bodyContent = renderToString(<Layout queries={queries} />);
+  
+  // Create final script section
+  const scripts = `
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      hljs.highlightAll();
+      
+      // Initialize tabs and action buttons for each query container
+      document.querySelectorAll('.tab-btn[data-tab-type="query"]').forEach(btn => {
+        // Set the Query tab as active by default
+        btn.classList.add('active');
+        
+        // Show Query tab action buttons
+        const tabContainer = btn.closest('.relative');
+        if (tabContainer) {
+          const queryName = btn.getAttribute('data-query-name');
+          
+          if (queryName) {
+            const sqlBtn = document.getElementById(\`copy-sql-\${queryName}\`);
+            const bqBtn = document.getElementById(\`copy-bq-\${queryName}\`);
+            
+            if (sqlBtn) sqlBtn.style.display = 'inline-flex';
+            if (bqBtn) bqBtn.style.display = 'inline-flex';
+          }
+          
+          // Hide Result tab action buttons
+          const csvBtn = tabContainer.querySelector('button[id^="copy-csv-"]');
+          if (csvBtn) csvBtn.style.display = 'none';
+        }
+      });
+      
+      // Add smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            window.scrollTo({
+              top: target.offsetTop - 80,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+      
+      // Show/hide back to top button
+      const backToTopButton = document.getElementById('back-to-top');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTopButton.classList.remove('hidden');
+        } else {
+          backToTopButton.classList.add('hidden');
+        }
+      });
+    });
+  </script>
+  `;
+
+  // Assemble the final HTML
+  const html = `<!DOCTYPE html>
+<html lang="en">
+${headContent}
+<body class="bg-gray-50 min-h-screen" id="top">
+  ${bodyContent}
+  ${scripts}
+</body>
+</html>`;
+
   return html;
 }
 
