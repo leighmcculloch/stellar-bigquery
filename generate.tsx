@@ -4,7 +4,8 @@ import { h, Fragment } from "npm:preact";
 import { renderToString } from "npm:preact-render-to-string";
 import { walk } from "jsr:@std/fs";
 import { basename, extname } from "jsr:@std/path";
-import { parse } from "jsr:@std/flags";
+import { parse as parseFlags } from "jsr:@std/flags";
+import { parse as parseCSV } from "jsr:@std/csv/parse";
 
 type Query = {
   name: string;
@@ -262,35 +263,120 @@ function QueryDisplay({ query }: { query: Query }) {
 }
 
 function renderCsvTable(csvContent: string) {
-  const lines = csvContent.trim().split('\n');
-  const headers = lines[0].split(',');
-  const rows = lines.slice(1);
-  
-  return (
-    <>
-      <thead className="bg-gray-100">
-        <tr>
-          {headers.map((header, i) => (
-            <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" key={i}>
-              {header}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="bg-white divide-y divide-gray-200">
-        {rows.map((row, i) => {
-          const cells = row.split(',');
-          return (
+  try {
+    // For our specific CSV format, we need to handle JSON values within fields
+    // Manually parse the CSV since we have a known format
+    const lines = csvContent.trim().split('\n');
+    const headerLine = lines[0];
+    const headers = headerLine.split(',');
+    
+    // Process data rows
+    const rows = lines.slice(1).map((line) => {
+      // Handle our CSV structure with potential JSON content
+      const row: Record<string, string> = {};
+      
+      // Find actual delimiters by tracking quotes
+      let inQuotes = false;
+      let currentValue = '';
+      let currentHeader = 0;
+      
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+          inQuotes = !inQuotes;
+          currentValue += char; // Keep quotes in the value for now
+        } else if (char === ',' && !inQuotes) {
+          // We found a column delimiter
+          if (currentHeader < headers.length) {
+            row[headers[currentHeader]] = cleanupValue(currentValue);
+            currentHeader++;
+            currentValue = '';
+          }
+        } else {
+          currentValue += char;
+        }
+      }
+      
+      // Add the last column
+      if (currentHeader < headers.length) {
+        row[headers[currentHeader]] = cleanupValue(currentValue);
+      }
+      
+      return row;
+    });
+    
+    // If we got here, parsing was successful
+    if (rows.length === 0) {
+      return <tbody><tr><td className="p-4">CSV has no data.</td></tr></tbody>;
+    }
+    
+    return (
+      <>
+        <thead className="bg-gray-100">
+          <tr>
+            {headers.map((header, i) => (
+              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" key={i}>
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {rows.map((row, i) => (
             <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-              {cells.map((cell, j) => (
-                <td className="px-4 py-3 text-sm text-gray-500" key={j}>{cell}</td>
+              {headers.map((header, j) => (
+                <td className="px-4 py-3 text-sm text-gray-500" key={j}>
+                  {row[header]}
+                </td>
               ))}
             </tr>
-          );
-        })}
+          ))}
+        </tbody>
+      </>
+    );
+  } catch (error) {
+    // Handle CSV parsing errors
+    console.error("CSV Parsing Error:", error.message);
+    return (
+      <tbody>
+        <tr>
+          <td colSpan={1} className="text-red-500 p-4">
+            Error parsing CSV data: {error.message}
+          </td>
+        </tr>
       </tbody>
-    </>
-  );
+    );
+  }
+}
+
+// Helper function to clean up field values
+function cleanupValue(value: string): string {
+  // Trim whitespace
+  value = value.trim();
+  
+  // If it looks like JSON, try to pretty print the value part
+  if (value.startsWith('"{"') && value.endsWith('}"')) {
+    try {
+      // Remove the extra quotes that wrap the JSON
+      value = value.substring(1, value.length - 1);
+      const jsonObj = JSON.parse(value);
+      
+      // Format the value from the JSON more cleanly
+      if (jsonObj.value !== undefined) {
+        // For display, just show the actual value inside quotes
+        return jsonObj.value;
+      } else {
+        // Otherwise return the string representation
+        return value;
+      }
+    } catch (e) {
+      // If it's not valid JSON, return as is
+      return value;
+    }
+  }
+  
+  return value;
 }
 
 function Layout({ queries }: { queries: Query[] }) {
@@ -550,7 +636,7 @@ async function generateHtml(): Promise<string> {
 }
 
 async function main() {
-  const args = parse(Deno.args);
+  const args = parseFlags(Deno.args);
   const outputPath = args.output || "dist/index.html";
 
   // Create output directory if it doesn't exist
