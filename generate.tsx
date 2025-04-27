@@ -361,52 +361,23 @@ function QueryDisplay({ query }: { query: Query }) {
 
 function renderCsvTable(csvContent: string) {
   try {
-    // For our specific CSV format, we need to handle JSON values within fields
-    // Manually parse the CSV since we have a known format
+    // Parse the CSV data
+    // First, we need to get the headers from the first line
     const lines = csvContent.trim().split('\n');
-    const headerLine = lines[0];
-    const headers = headerLine.split(',');
-    
-    // Process data rows
-    const rows = lines.slice(1).map((line) => {
-      // Handle our CSV structure with potential JSON content
-      const row: Record<string, string> = {};
-      
-      // Find actual delimiters by tracking quotes
-      let inQuotes = false;
-      let currentValue = '';
-      let currentHeader = 0;
-      
-      for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-        
-        if (char === '"') {
-          inQuotes = !inQuotes;
-          currentValue += char; // Keep quotes in the value for now
-        } else if (char === ',' && !inQuotes) {
-          // We found a column delimiter
-          if (currentHeader < headers.length) {
-            row[headers[currentHeader]] = cleanupValue(currentValue);
-            currentHeader++;
-            currentValue = '';
-          }
-        } else {
-          currentValue += char;
-        }
-      }
-      
-      // Add the last column
-      if (currentHeader < headers.length) {
-        row[headers[currentHeader]] = cleanupValue(currentValue);
-      }
-      
-      return row;
-    });
-    
-    // If we got here, parsing was successful
-    if (rows.length === 0) {
+    if (lines.length === 0) {
       return <tbody><tr><td className="p-4">CSV has no data.</td></tr></tbody>;
     }
+    
+    const headers = lines[0].split(',');
+    
+    // Now parse the rows with the Deno standard library
+    const result = parseCSV(csvContent);
+    if (!result.length) {
+      return <tbody><tr><td className="p-4">CSV has no data.</td></tr></tbody>;
+    }
+    
+    // Skip the header row
+    const rows = result.slice(1);
     
     return (
       <>
@@ -420,13 +391,30 @@ function renderCsvTable(csvContent: string) {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {rows.map((row, i) => (
-            <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-              {headers.map((header, j) => (
-                <td className="px-4 py-3 text-sm text-gray-500" key={j}>
-                  {row[header]}
-                </td>
-              ))}
+          {rows.map((rowData, rowIndex) => (
+            <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+              {rowData.map((cellValue, cellIndex) => {
+                let displayValue = cellValue;
+                
+                // If it looks like JSON, try to extract the value part
+                if (cellValue && typeof cellValue === 'string' && 
+                    cellValue.includes('"type"') && cellValue.includes('"value"')) {
+                  try {
+                    const jsonObj = JSON.parse(cellValue);
+                    if (jsonObj.value !== undefined) {
+                      displayValue = jsonObj.value;
+                    }
+                  } catch (e) {
+                    // If parsing fails, just use the original value
+                  }
+                }
+                
+                return (
+                  <td className="px-4 py-3 text-sm text-gray-500" key={cellIndex}>
+                    {displayValue}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
@@ -447,38 +435,6 @@ function renderCsvTable(csvContent: string) {
   }
 }
 
-// Helper function to clean up field values
-function cleanupValue(value: string): string {
-  // Trim whitespace
-  value = value.trim();
-  
-  // If it looks like JSON, try to pretty print the value part
-  if (value.startsWith('"{"') && value.endsWith('}"')) {
-    try {
-      // Remove the extra quotes that wrap the JSON
-      value = value.substring(1, value.length - 1);
-      
-      // Replace double double-quotes with single double-quotes in the JSON string
-      value = value.replace(/""/g, '"');
-      
-      const jsonObj = JSON.parse(value);
-      
-      // Format the value from the JSON more cleanly
-      if (jsonObj.value !== undefined) {
-        // For display, just show the actual value inside quotes
-        return jsonObj.value;
-      } else {
-        // Otherwise return the string representation
-        return value;
-      }
-    } catch (e) {
-      // If it's not valid JSON, return as is
-      return value;
-    }
-  }
-  
-  return value;
-}
 
 function Layout({ queries }: { queries: Query[] }) {
   const timestamp = new Date().toISOString();
