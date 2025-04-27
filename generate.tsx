@@ -91,47 +91,45 @@ function QueryDisplay({ query }: { query: Query }) {
       className="query-container my-12 bg-white rounded-lg shadow-md overflow-hidden"
       id={query.name}
     >
-      <div className="px-6 py-4 bg-indigo-50 border-b border-indigo-100 flex justify-between items-start">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800">
-            {query.displayName}
-          </h2>
-          <div className="flex flex-wrap gap-3 mt-2">
-            <span className="inline-flex items-center px-3 py-1 rounded-md bg-gray-100 text-sm text-gray-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-4 h-4 mr-1 flex-shrink-0"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                />
-              </svg>
-              <code className="font-mono text-xs truncate">{query.path}</code>
-            </span>
-            <a
-              href={githubUrl}
-              target="_blank"
-              className="inline-flex items-center px-3 py-1 rounded-md bg-indigo-50 text-sm text-indigo-600 hover:bg-indigo-100 hover:text-indigo-800 transition-colors duration-200"
-              title="View on GitHub"
+      <div className="px-6 py-4 bg-indigo-50 border-b border-indigo-100 flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-800">
+          {query.displayName}
+        </h2>
+        <div className="flex flex-wrap gap-3">
+          <span className="inline-flex items-center px-3 py-1 rounded-md bg-gray-100 text-sm text-gray-600">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-4 h-4 mr-1 flex-shrink-0"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="w-4 h-4 mr-1 flex-shrink-0"
-              >
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
-              </svg>
-              View on GitHub
-            </a>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+              />
+            </svg>
+            <code className="font-mono text-xs truncate">{query.path}</code>
+          </span>
+          <a
+            href={githubUrl}
+            target="_blank"
+            className="inline-flex items-center px-3 py-1 rounded-md bg-indigo-50 text-sm text-indigo-600 hover:bg-indigo-100 hover:text-indigo-800 transition-colors duration-200"
+            title="View on GitHub"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="w-4 h-4 mr-1 flex-shrink-0"
+            >
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            View on GitHub
+          </a>
         </div>
       </div>
       
@@ -229,7 +227,7 @@ function QueryDisplay({ query }: { query: Query }) {
                 }
               `}
             >
-              Results
+              Sample Results
             </button>
             
             {/* Action Buttons Container */}
@@ -245,7 +243,7 @@ function QueryDisplay({ query }: { query: Query }) {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
                 </svg>
-                Copy
+                Copy Query
               </button>
               
               {/* Copy & Open BigQuery Button */}
@@ -263,7 +261,7 @@ function QueryDisplay({ query }: { query: Query }) {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                 </svg>
-                Open BQ
+                Copy Query & Open BigQuery
               </a>
               
               {/* Copy CSV Button */}
@@ -290,20 +288,15 @@ function QueryDisplay({ query }: { query: Query }) {
           </div>
           
           <div id={`${query.name}-result`} className="tab-content hidden">
-            {/* Warning banner for historical data */}
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-sm">
-              <p className="font-bold">Heads up!</p>
-              <p className="text-sm">
-                These results were generated{' '}
-                {query.generatedAt ? (
-                  <>
-                    on <span className="font-medium">{query.generatedAt}</span> and are
-                  </>
-                ) : (
-                  'at an earlier time and are'
-                )}{' '}
-                not automatically updated. For the most current data, please run the query directly against BigQuery.
-              </p>
+            {/* Warning banner for historical data with same padding as content */}
+            <div className="p-6 bg-gray-50">
+              <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-sm">
+                <p className="font-bold">Heads up!</p>
+                <p className="text-sm">
+                  These sample results were generated at an earlier time and are not automatically updated. 
+                  For the most current data, please run the query directly against BigQuery.
+                </p>
+              </div>
             </div>
             
             <div className="p-6 bg-gray-50 overflow-auto">
@@ -335,7 +328,7 @@ function QueryDisplay({ query }: { query: Query }) {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
                 </svg>
-                Copy
+                Copy Query
               </button>
               
               {/* Copy & Open BigQuery Button */}
@@ -352,7 +345,7 @@ function QueryDisplay({ query }: { query: Query }) {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                 </svg>
-                Open BQ
+                Copy Query & Open BigQuery
               </a>
             </div>
           </div>
@@ -464,6 +457,10 @@ function cleanupValue(value: string): string {
     try {
       // Remove the extra quotes that wrap the JSON
       value = value.substring(1, value.length - 1);
+      
+      // Replace double double-quotes with single double-quotes in the JSON string
+      value = value.replace(/""/g, '"');
+      
       const jsonObj = JSON.parse(value);
       
       // Format the value from the JSON more cleanly
