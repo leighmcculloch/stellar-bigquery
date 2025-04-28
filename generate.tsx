@@ -289,7 +289,7 @@ function QueryDisplay({ query }: { query: Query }) {
           
           <div id={`${query.name}-result`} className="tab-content hidden">
             {/* Warning banner for historical data with content area */}
-            <div className="p-6 pt-6 pb-0 bg-gray-50">
+            <div className="p-6 bg-gray-50">
               <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-sm mb-6">
                 <p className="font-bold">Heads up!</p>
                 <p className="text-sm">
