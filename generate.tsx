@@ -394,24 +394,9 @@ function renderCsvTable(csvContent: string) {
           {rows.map((rowData, rowIndex) => (
             <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}>
               {rowData.map((cellValue, cellIndex) => {
-                let displayValue = cellValue;
-                
-                // If it looks like JSON, try to extract the value part
-                if (cellValue && typeof cellValue === 'string' && 
-                    cellValue.includes('"type"') && cellValue.includes('"value"')) {
-                  try {
-                    const jsonObj = JSON.parse(cellValue);
-                    if (jsonObj.value !== undefined) {
-                      displayValue = jsonObj.value;
-                    }
-                  } catch (e) {
-                    // If parsing fails, just use the original value
-                  }
-                }
-                
                 return (
                   <td className="px-4 py-3 text-sm text-gray-500" key={cellIndex}>
-                    {displayValue}
+                    {cellValue}
                   </td>
                 );
               })}
