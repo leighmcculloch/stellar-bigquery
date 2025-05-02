@@ -180,6 +180,10 @@ function QueryDisplay({ query }: { query: Query }) {
                     if (csvBtn) csvBtn.style.display = 'inline-flex';
                   }
                 }
+                
+                // Update URL hash to reflect active tab
+                const hash = '#' + queryName;
+                history.pushState(null, null, tabType === 'query' ? hash : hash + '&tab=results');
               `}
             >
               Query
@@ -225,6 +229,10 @@ function QueryDisplay({ query }: { query: Query }) {
                     if (csvBtn) csvBtn.style.display = 'inline-flex';
                   }
                 }
+                
+                // Update URL hash to reflect active tab
+                const hash = '#' + queryName;
+                history.pushState(null, null, tabType === 'query' ? hash : hash + '&tab=results');
               `}
             >
               Sample Results
@@ -678,19 +686,47 @@ async function generateHtml(): Promise<string> {
         }
       });
       
-      // Add smooth scrolling for anchor links
+      // Add smooth scrolling for anchor links & update URL hash
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
           e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
+          const hash = this.getAttribute('href');
+          const target = document.querySelector(hash);
           if (target) {
             window.scrollTo({
               top: target.offsetTop - 80,
               behavior: 'smooth'
             });
+            // Update URL with the hash
+            history.pushState(null, null, hash);
           }
         });
       });
+      
+      // Check if URL has a hash on page load and scroll to it
+      if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+          // Small delay to ensure page is fully loaded
+          setTimeout(() => {
+            window.scrollTo({
+              top: target.offsetTop - 80,
+              behavior: 'smooth'
+            });
+            
+            // If hash points to a query, activate appropriate tab
+            if (target.classList.contains('query-container')) {
+              const queryName = target.id;
+              // Check if there's a results tab for this query
+              const resultsTabBtn = document.querySelector('.tab-btn[data-tab-type="result"][data-query-name="' + queryName + '"]');
+              if (resultsTabBtn && window.location.hash.includes('&tab=results')) {
+                // Click the results tab
+                resultsTabBtn.click();
+              }
+            }
+          }, 100);
+        }
+      }
       
       // Show/hide back to top button
       const backToTopButton = document.getElementById('back-to-top');
