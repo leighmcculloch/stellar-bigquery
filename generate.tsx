@@ -705,7 +705,17 @@ async function generateHtml(): Promise<string> {
       
       // Check if URL has a hash on page load and scroll to it
       if (window.location.hash) {
-        const target = document.querySelector(window.location.hash);
+        // Handle _results suffix in hash
+        let targetSelector = window.location.hash;
+        let showResults = false;
+        
+        if (targetSelector.includes('_results')) {
+          // Remove _results suffix for finding the element
+          targetSelector = targetSelector.replace('_results', '');
+          showResults = true;
+        }
+        
+        const target = document.querySelector(targetSelector);
         if (target) {
           // Small delay to ensure page is fully loaded
           setTimeout(() => {
@@ -717,11 +727,13 @@ async function generateHtml(): Promise<string> {
             // If hash points to a query, activate appropriate tab
             if (target.classList.contains('query-container')) {
               const queryName = target.id;
-              // Check if there's a results tab for this query
-              const resultsTabBtn = document.querySelector('.tab-btn[data-tab-type="result"][data-query-name="' + queryName + '"]');
-              if (resultsTabBtn && window.location.hash.includes('_results')) {
-                // Click the results tab
-                resultsTabBtn.click();
+              // Check if we should show results tab for this query
+              if (showResults) {
+                const resultsTabBtn = document.querySelector('.tab-btn[data-tab-type="result"][data-query-name="' + queryName + '"]');
+                if (resultsTabBtn) {
+                  // Click the results tab
+                  resultsTabBtn.click();
+                }
               }
             }
           }, 100);
