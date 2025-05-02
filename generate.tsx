@@ -183,7 +183,7 @@ function QueryDisplay({ query }: { query: Query }) {
                 
                 // Update URL hash to reflect active tab
                 const hash = '#' + queryName;
-                history.pushState(null, null, tabType === 'query' ? hash : hash + '&tab=results');
+                history.pushState(null, null, tabType === 'query' ? hash : hash + '_results');
               `}
             >
               Query
@@ -232,7 +232,7 @@ function QueryDisplay({ query }: { query: Query }) {
                 
                 // Update URL hash to reflect active tab
                 const hash = '#' + queryName;
-                history.pushState(null, null, tabType === 'query' ? hash : hash + '&tab=results');
+                history.pushState(null, null, tabType === 'query' ? hash : hash + '_results');
               `}
             >
               Sample Results
@@ -719,7 +719,7 @@ async function generateHtml(): Promise<string> {
               const queryName = target.id;
               // Check if there's a results tab for this query
               const resultsTabBtn = document.querySelector('.tab-btn[data-tab-type="result"][data-query-name="' + queryName + '"]');
-              if (resultsTabBtn && window.location.hash.includes('&tab=results')) {
+              if (resultsTabBtn && window.location.hash.includes('_results')) {
                 // Click the results tab
                 resultsTabBtn.click();
               }
